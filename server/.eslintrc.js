@@ -24,6 +24,6 @@ module.exports = {
     indent: 'off',
     '@typescript-eslint/indent': ['warn', 2],
     quotes: ['warn', 'single'],
-    semi: ['warn', 'never'],
+    semi: ['error', 'always'],
   },
 };
