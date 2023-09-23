@@ -9,28 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
-const typeorm_1 = require("typeorm");
-let User = class User {
-};
-exports.User = User;
+exports.SignInDto = void 0;
+const class_validator_1 = require("class-validator");
+class SignInDto {
+}
+exports.SignInDto = SignInDto;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], User.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ unique: true }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your nickname" }),
     __metadata("design:type", String)
-], User.prototype, "nickname", void 0);
+], SignInDto.prototype, "nickname", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your password" }),
+    (0, class_validator_1.IsString)({ message: 'Input password' }),
     __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ nullable: false, default: Date.now() }),
-    __metadata("design:type", String)
-], User.prototype, "createdAt", void 0);
-exports.User = User = __decorate([
-    (0, typeorm_1.Entity)({ name: 'users' })
-], User);
-//# sourceMappingURL=User.js.map
+], SignInDto.prototype, "password", void 0);
+//# sourceMappingURL=signin.dto.js.map

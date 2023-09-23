@@ -12,40 +12,40 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UsersController = void 0;
+exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const users_service_1 = require("./users.service");
-const delete_user_dto_1 = require("./dto/delete-user.dto");
-const auth_guard_1 = require("../guards/auth.guard");
-let UsersController = class UsersController {
-    constructor(usersService) {
-        this.usersService = usersService;
+const auth_service_1 = require("./auth.service");
+const signup_dto_1 = require("./dto/signup.dto");
+const signin_dto_1 = require("./dto/signin.dto");
+let AuthController = class AuthController {
+    constructor(authService) {
+        this.authService = authService;
     }
-    async getAll() {
-        return await this.usersService.findAllUsers();
+    async create(signupDto) {
+        return await this.authService.signUp(signupDto);
     }
-    async delete(deleteUserDto) {
-        return await this.usersService.deleteUser(deleteUserDto);
+    async signIn(signInDto) {
+        return await this.authService.signIn(signInDto);
     }
 };
-exports.UsersController = UsersController;
+exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Post)('signup'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    __param(0, (0, common_1.Body)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [signup_dto_1.SignupDto]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getAll", null);
+], AuthController.prototype, "create", null);
 __decorate([
-    (0, common_1.Delete)(),
-    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Post)('signin'),
+    __param(0, (0, common_1.Body)(common_1.ValidationPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [delete_user_dto_1.DeleteUserDto]),
+    __metadata("design:paramtypes", [signin_dto_1.SignInDto]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "delete", null);
-exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)('users'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
-], UsersController);
-//# sourceMappingURL=users.controller.js.map
+], AuthController.prototype, "signIn", null);
+exports.AuthController = AuthController = __decorate([
+    (0, common_1.Controller)('auth'),
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
+], AuthController);
+//# sourceMappingURL=auth.controller.js.map

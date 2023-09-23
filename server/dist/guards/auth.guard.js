@@ -6,27 +6,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductsService = void 0;
+exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
-let ProductsService = class ProductsService {
-    constructor() {
-        this.products = [];
-    }
-    getAll() {
-        return this.products;
-    }
-    getById(id) {
-        return this.products.find((p) => p.id === id);
-    }
-    createOne(productDto) {
-        this.products.push({
-            ...productDto,
-            id: Date.now(),
-        });
+const jwt = require("jsonwebtoken");
+const dotenv_1 = require("dotenv");
+(0, dotenv_1.config)();
+let AuthGuard = class AuthGuard {
+    canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const token = request.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return false;
+        }
+        try {
+            jwt.verify(token, process.env.JWT_SECRET);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
     }
 };
-exports.ProductsService = ProductsService;
-exports.ProductsService = ProductsService = __decorate([
+exports.AuthGuard = AuthGuard;
+exports.AuthGuard = AuthGuard = __decorate([
     (0, common_1.Injectable)()
-], ProductsService);
-//# sourceMappingURL=products.service.js.map
+], AuthGuard);
+//# sourceMappingURL=auth.guard.js.map

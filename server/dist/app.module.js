@@ -10,10 +10,10 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const products_module_1 = require("./products/products.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("./typeorm/entities/User");
 const users_module_1 = require("./users/users.module");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,8 +30,8 @@ exports.AppModule = AppModule = __decorate([
                 database: 'tictactoemysql',
                 entities: [User_1.User],
             }),
-            products_module_1.ProductsModule,
             users_module_1.UsersModule,
+            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
