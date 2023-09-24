@@ -50,8 +50,8 @@ let AuthService = class AuthService {
         }
         try {
             const token = this.jwtService.sign({
-                userId: existingUser.id,
-                name: existingUser.nickname,
+                id: existingUser.id,
+                nickname: existingUser.nickname,
             });
             return {
                 token,
@@ -59,8 +59,8 @@ let AuthService = class AuthService {
                 message: `Logged in as ${nickname}`,
             };
         }
-        catch (error) {
-            console.error('JWT signing error:', error);
+        catch (e) {
+            console.error('JWT signing error:', e);
             throw new common_1.HttpException('Unable to sign JWT', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

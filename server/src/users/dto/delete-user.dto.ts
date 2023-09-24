@@ -1,4 +1,6 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class DeleteUserDto {
-  id: number;
+  @IsNotEmpty({ message: "Don't forget your password" })
   password: string;
 }

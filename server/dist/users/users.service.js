@@ -17,22 +17,75 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../typeorm/entities/User");
 const typeorm_2 = require("typeorm");
+const bcrypt = require("bcrypt");
+const decodeJwt_1 = require("../utils/decodeJwt");
 let UsersService = class UsersService {
-    constructor(userRepository) {
+    constructor(userRepository, decodeJwt) {
         this.userRepository = userRepository;
+        this.decodeJwt = decodeJwt;
     }
-    findAllUsers() {
-        return this.userRepository.find();
-    }
-    createUser(userDetails) {
-        const newUser = this.userRepository.create({
-            ...userDetails,
+    async updateNickname(userDetails, bearerToken) {
+        const decodedToken = await this.decodeJwt.decodeJwtToken(bearerToken);
+        const userId = decodedToken.id;
+        const existingUser = await this.userRepository.findOne({
+            where: { id: userId },
         });
-        return this.userRepository.save(newUser);
+        if (!existingUser) {
+            throw new common_1.HttpException('User does not exist', common_1.HttpStatus.BAD_REQUEST);
+        }
+        try {
+            return this.userRepository.update({
+                id: userId,
+            }, { nickname: userDetails.nickname });
+        }
+        catch (e) {
+            console.error('Update nickname operation error:', e);
+            throw new common_1.HttpException('Server error, unable to update name', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-    deleteUser(userDetails) {
-        if (userDetails) {
-            return this.userRepository.delete({ id: userDetails.id });
+    async updatePassword(userDetails, bearerToken) {
+        const decodedToken = await this.decodeJwt.decodeJwtToken(bearerToken);
+        const userId = decodedToken.id;
+        const existingUser = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!existingUser) {
+            throw new common_1.HttpException('User does not exist', common_1.HttpStatus.BAD_REQUEST);
+        }
+        const isMatch = await bcrypt.compare(userDetails.oldPassword, existingUser.password);
+        if (!isMatch) {
+            throw new common_1.HttpException('Incorrect old password, try again', common_1.HttpStatus.BAD_REQUEST);
+        }
+        const hashedNewPassword = await bcrypt.hash(userDetails.newPassword, 12);
+        try {
+            return this.userRepository.update({
+                id: userId,
+            }, { password: hashedNewPassword });
+        }
+        catch (e) {
+            console.error('Update password operation error:', e);
+            throw new common_1.HttpException('Server error, unable to update name', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    async deleteUser(userDetails, bearerToken) {
+        const decodedToken = await this.decodeJwt.decodeJwtToken(bearerToken);
+        const userId = decodedToken.id;
+        const existingUser = await this.userRepository.findOne({
+            where: { id: userId },
+        });
+        if (!existingUser) {
+            throw new common_1.HttpException('User does not exist', common_1.HttpStatus.BAD_REQUEST);
+        }
+        const isMatch = await bcrypt.compare(userDetails.password, existingUser.password);
+        if (!isMatch) {
+            throw new common_1.HttpException('Incorrect password, try again', common_1.HttpStatus.BAD_REQUEST);
+        }
+        try {
+            return this.userRepository.delete({ id: userId });
+        }
+        catch (e) {
+            console.error('Delete operation error:', e);
+            throw new common_1.HttpException('Server error, unable to delete user', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 };
@@ -40,6 +93,7 @@ exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(User_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        decodeJwt_1.DecodeJwt])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

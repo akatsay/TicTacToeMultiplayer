@@ -9,13 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteUserDto = void 0;
+exports.UpdateNicknameDto = void 0;
 const class_validator_1 = require("class-validator");
-class DeleteUserDto {
+class UpdateNicknameDto {
 }
-exports.DeleteUserDto = DeleteUserDto;
+exports.UpdateNicknameDto = UpdateNicknameDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your password" }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Input new nickname' }),
+    (0, class_validator_1.Length)(2, 30, {
+        message: 'New nickname should be less than 30 characters long',
+    }),
     __metadata("design:type", String)
-], DeleteUserDto.prototype, "password", void 0);
-//# sourceMappingURL=delete-user.dto.js.map
+], UpdateNicknameDto.prototype, "nickname", void 0);
+//# sourceMappingURL=update-nickname.dto.js.map

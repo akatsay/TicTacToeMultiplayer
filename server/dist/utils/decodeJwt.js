@@ -9,13 +9,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteUserDto = void 0;
-const class_validator_1 = require("class-validator");
-class DeleteUserDto {
-}
-exports.DeleteUserDto = DeleteUserDto;
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your password" }),
-    __metadata("design:type", String)
-], DeleteUserDto.prototype, "password", void 0);
-//# sourceMappingURL=delete-user.dto.js.map
+exports.DecodeJwt = void 0;
+const common_1 = require("@nestjs/common");
+const jwt_1 = require("@nestjs/jwt");
+let DecodeJwt = class DecodeJwt {
+    constructor(jwtService) {
+        this.jwtService = jwtService;
+    }
+    async decodeJwtToken(token) {
+        const cleanToken = token.split(' ')[1];
+        const finalToken = cleanToken ? cleanToken : token;
+        try {
+            const decoded = this.jwtService.decode(finalToken);
+            return decoded;
+        }
+        catch (error) {
+            throw new Error('Invalid token');
+        }
+    }
+};
+exports.DecodeJwt = DecodeJwt;
+exports.DecodeJwt = DecodeJwt = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [jwt_1.JwtService])
+], DecodeJwt);
+//# sourceMappingURL=decodeJwt.js.map

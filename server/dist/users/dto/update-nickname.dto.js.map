@@ -1,0 +1,1 @@
+{"version":3,"file":"update-nickname.dto.js","sourceRoot":"","sources":["../../../src/users/dto/update-nickname.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAAqD;AAErD,MAAa,iBAAiB;CAM7B;AAND,8CAMC;AADC;IAJC,IAAA,4BAAU,EAAC,EAAE,OAAO,EAAE,oBAAoB,EAAE,CAAC;IAC7C,IAAA,wBAAM,EAAC,CAAC,EAAE,EAAE,EAAE;QACb,OAAO,EAAE,qDAAqD;KAC/D,CAAC;;mDACe"}

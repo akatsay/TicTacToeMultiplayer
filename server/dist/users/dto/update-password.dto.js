@@ -9,13 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteUserDto = void 0;
+exports.UpdatePasswordDto = void 0;
 const class_validator_1 = require("class-validator");
-class DeleteUserDto {
+class UpdatePasswordDto {
 }
-exports.DeleteUserDto = DeleteUserDto;
+exports.UpdatePasswordDto = UpdatePasswordDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your password" }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'Input your old Password' }),
     __metadata("design:type", String)
-], DeleteUserDto.prototype, "password", void 0);
-//# sourceMappingURL=delete-user.dto.js.map
+], UpdatePasswordDto.prototype, "oldPassword", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)({ message: 'Password cannot be blank' }),
+    (0, class_validator_1.Length)(8, 30, {
+        message: 'New password should be between 8 and 30 characters',
+    }),
+    (0, class_validator_1.Matches)(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
+        message: 'New Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+    }),
+    __metadata("design:type", String)
+], UpdatePasswordDto.prototype, "newPassword", void 0);
+//# sourceMappingURL=update-password.dto.js.map

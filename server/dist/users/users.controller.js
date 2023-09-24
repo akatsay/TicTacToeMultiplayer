@@ -17,30 +17,46 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const delete_user_dto_1 = require("./dto/delete-user.dto");
 const auth_guard_1 = require("../guards/auth.guard");
+const update_nickname_dto_1 = require("./dto/update-nickname.dto");
+const update_password_dto_1 = require("./dto/update-password.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    async getAll() {
-        return await this.usersService.findAllUsers();
+    async updateName(updateNickname, bearerToken) {
+        return await this.usersService.updateNickname(updateNickname, bearerToken);
     }
-    async delete(deleteUserDto) {
-        return await this.usersService.deleteUser(deleteUserDto);
+    async updatePassword(updatePasswordDto, bearerToken) {
+        return await this.usersService.updatePassword(updatePasswordDto, bearerToken);
+    }
+    async delete(deleteUserDto, bearerToken) {
+        return await this.usersService.deleteUser(deleteUserDto, bearerToken);
     }
 };
 exports.UsersController = UsersController;
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Patch)('nickname'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)('Authorization')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [update_nickname_dto_1.UpdateNicknameDto, String]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getAll", null);
+], UsersController.prototype, "updateName", null);
+__decorate([
+    (0, common_1.Patch)('password'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)('Authorization')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [update_password_dto_1.UpdatePasswordDto, String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updatePassword", null);
 __decorate([
     (0, common_1.Delete)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)('Authorization')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [delete_user_dto_1.DeleteUserDto]),
+    __metadata("design:paramtypes", [delete_user_dto_1.DeleteUserDto, String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "delete", null);
 exports.UsersController = UsersController = __decorate([
