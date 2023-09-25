@@ -1,0 +1,55 @@
+@import "colors.scss";
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modal-container {
+  max-width: 400px;
+  min-width: 200px;
+  width: 60%;
+  position: fixed;
+  display: flex;
+  background-color: $fifth;
+  box-shadow: 0px 0px 18px 0px var(--error);
+  border-radius: 8px;
+  border: 1px solid var(--error);
+}
+
+.modal-container > * {
+  margin: 1rem;
+  color: white;
+}
+
+.red-star {
+  font-size: 1.5rem;
+  color: red;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-checkbox {
+  margin: 1rem 0;
+}
+
+.modal-checkbox:hover {
+  cursor: pointer;
+}
+
+.modal-buttons-container {
+  margin-top: 0.5rem;
+}
+
+.modal-buttons-container > * {
+  margin: 0 0.5rem;
+}

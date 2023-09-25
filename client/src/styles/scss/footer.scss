@@ -1,0 +1,47 @@
+@import 'colors.scss';
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: $primary;
+  width: 100%;
+}
+
+.footer > * {
+  margin: 0.8rem;
+}
+
+.author {
+  color: $fourth;
+}
+
+.author:hover {
+  color: white;
+}
+
+.smile {
+  display: inline-block;
+  margin: 0;
+  transition: transform 0.2s ease-in-out;
+}
+
+.author:hover .smile{
+  transform: scale(1.5);
+}
+
+.fa-brands {
+  color: $fourth;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.pustishka {
+  opacity: 0;
+}
+
+@media (max-width: 450px) {
+  .pustishka {
+    display: none;
+  }
+}

@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true, // Add the "node" environment
+    node: true,
   },
   extends: [
     'eslint:recommended',
@@ -20,8 +20,8 @@ module.exports = {
     indent: 'off',
     '@typescript-eslint/indent': ['warn', 2],
     quotes: ['warn', 'single'],
-    semi: ['warn', 'never'],
+    semi: ['error', 'always'],
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
   },
-}
+};

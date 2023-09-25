@@ -1,0 +1,143 @@
+/* input styles come from login&register css */
+@import 'login&register.scss';
+@import 'colors.scss';
+
+.account-page-container {
+  flex: 1;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.link {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-family: arial, sans-serif;
+  font-size: 1rem;
+  color: $primary;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: $fifth;
+}
+
+.submit-button {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+.page-title {
+  text-align: center;
+  margin: 40px 0 20px 0;
+}
+
+.settings-container {
+  max-width: 500px;
+  min-width: 265px;
+  width: 50%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: $third;
+  border-radius: 10px;
+}
+
+.setting-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.change-btn {
+  background-color: $primary;
+  color: $fourth;
+  border-radius: 10px;
+  border: none;
+}
+
+.submit-button {
+  background-color: $primary;
+  color: $fourth;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: none;
+}
+
+.change-btn:hover, .submit-button:hover {
+  background-color: $fifth;
+}
+
+.change-menu {
+  height: 0;
+  margin: 0 1rem;
+}
+
+.change-menu *{
+  pointer-events: none;
+  touch-action: none;
+  opacity: 0;
+}
+
+.change-menu.name.show {
+  transition: height 0.3s linear;
+  height: 100px;
+}
+
+.change-menu.name.hide {
+  transition: height 0.3s 0.2s linear;
+  height: 0px;
+}
+
+.change-menu.password.show {
+  transition: height 0.3s linear;
+  height: 220px;
+}
+
+.change-menu.password.hide {
+  transition: height 0.3s 0.2s linear;
+  height: 0px;
+}
+
+.change-menu.show * {
+  touch-action: auto;
+  pointer-events: auto;
+  transition: opacity 0.2s 0.3s linear, height 0.2s;
+  opacity: 1;
+}
+
+.change-menu.hide * {
+  transition: opacity 0.2s linear;
+  opacity: 0;
+}
+
+.error-details {
+  margin-top: 10px;
+}
+
+.parameter-label{
+  color: $primary;
+}
+
+.pustishka {
+  cursor: default;
+}
+
+.setting-wrapper.setting-wrapper-toggle-type {
+  justify-content: center;
+}
+
+.delete-account-btn {
+  background-color: $error;
+  color: $fourth;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: none;
+}

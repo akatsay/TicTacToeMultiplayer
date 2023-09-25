@@ -1,0 +1,146 @@
+@import 'colors.scss';
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  color: $fourth;
+  align-items: center;
+  background-color: $primary;
+  width: 100%;
+}
+
+.dropdown.hide {
+  display: none;
+}
+
+.brand-title {
+  font-size: 2rem;
+  margin: 0;
+  margin-left: 0.5rem;
+}
+
+.dropdown {
+  position: relative;
+  display: block;
+  height: 54px;
+}
+
+.drop-trigger {
+  background: none;
+  border: none;
+  padding: 0!important;
+  font-size: 1rem;
+  color: $fourth;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.drop-trigger:hover {
+  background-color: gray;
+}
+
+.drop-trigger p {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.drop-trigger i {
+  text-align: center;
+  font-size: 0.8rem;
+  color: orange;
+  margin: 0.2rem;
+}
+
+.drop-trigger.small {
+  display: none;
+}
+
+.drop-trigger.small span {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
+  background: var(--fourth);
+  border-radius: 3px;
+  z-index: 1;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 65px;
+  right: -200px;
+  margin: 0;
+  padding: 0;
+  background-color: gray;
+  box-shadow: 8px 8px 16px 8px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  list-style: none;
+  z-index: 1;
+  transition: transform 0.3s ease-out;
+}
+
+.dropdown-menu.show {
+  transform: translateX(-215px);
+}
+
+.dropdown-menu button {
+  display: block;
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 0.5rem;
+  font-family: arial, sans-serif;
+  font-size: 0.8rem;
+  color: orange;
+}
+
+.dropdown-menu .menu-item button{
+  font-size: 1.5rem;
+  border-bottom: 2px solid black;
+  transition: color 200ms linear;
+}
+
+.dropdown-menu .menu-item:first-of-type, .account-nav-btn {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.dropdown-menu .menu-item:last-of-type, .logout-btn {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+
+
+/* Change color of dropdown links on hover */
+.dropdown-menu *:hover {color: $fourth;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .drop-trigger {background-color: gray;}
+
+@media (max-width: 550px) {
+
+  .drop-trigger.small {
+    display: block;
+  }
+
+  .drop-trigger.big {
+    display: none;
+  }
+}
+
+@media (max-width: 300px) {
+  .brand-title {
+    display: none;
+  }
+
+  .navbar {
+    justify-content: flex-end;
+  }
+}

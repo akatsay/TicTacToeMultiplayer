@@ -1,0 +1,119 @@
+@import "colors.scss";
+
+.auth-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  background-color: $third;
+  border-radius: 10px;
+  width: 30vw;
+}
+
+.auth-card > * {
+  margin: 1rem;
+}
+
+.action-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-inputs-container > *{
+  margin: 0.5rem 0;
+}
+
+.input-field > * {
+  display: block;
+}
+
+.input-label {
+  font-size: 0.8rem;
+  color: $primary;
+}
+
+.input {
+  height: 1.5rem;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #435160;
+  outline: none;
+  color: #6D7781;
+  font-size: 16px;
+  transition: height 0.2s ease-in-out;
+}
+
+.input:focus {
+  height: 2.5rem;
+}
+
+.auth-action-choice > * {
+  display: inline;
+}
+
+.auth-action-choice {
+  text-align: center;
+}
+
+.auth-link {
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  font-family: arial, sans-serif;
+  font-size: 1rem;
+  color: $primary;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth-link:hover {
+  color: $fifth;
+}
+
+.auth-action-btn {
+  display: block;
+  margin: auto;
+  width: 60%;
+  background-color: $primary;
+  color: $fourth;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  border: none;
+}
+
+.auth-action-btn:hover {
+  background-color: $fifth;
+}
+
+.error-details {
+  text-align: center;
+  color: $error;
+}
+
+@media (max-width: 750px) {
+  .auth-card {
+    width: 40vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-card {
+    width: 50vw;
+  }
+}
+
+@media (max-width: 450px) {
+  .auth-card {
+    width: 60vw;
+  }
+}
+
+@media (max-width: 300px) {
+  .auth-card {
+    width: 80vw;
+  }
+}
