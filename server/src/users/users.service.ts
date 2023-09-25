@@ -28,12 +28,13 @@ export class UsersService {
     }
 
     try {
-      return this.userRepository.update(
+      await this.userRepository.update(
         {
           id: userId,
         },
         { nickname: userDetails.nickname },
       );
+      return;
     } catch (e) {
       console.error('Update nickname operation error:', e);
       throw new HttpException(
@@ -55,14 +56,26 @@ export class UsersService {
       throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
     }
 
-    const isMatch = await bcrypt.compare(
+    const isCurrentPasswordMatch = await bcrypt.compare(
       userDetails.oldPassword,
       existingUser.password,
     );
 
-    if (!isMatch) {
+    if (!isCurrentPasswordMatch) {
       throw new HttpException(
         'Incorrect old password, try again',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const isNewPasswordSameAsOld = await bcrypt.compare(
+      userDetails.newPassword,
+      existingUser.password,
+    );
+
+    if (isNewPasswordSameAsOld) {
+      throw new HttpException(
+        'New password should be different from the old one',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -70,16 +83,17 @@ export class UsersService {
     const hashedNewPassword = await bcrypt.hash(userDetails.newPassword, 12);
 
     try {
-      return this.userRepository.update(
+      await this.userRepository.update(
         {
           id: userId,
         },
         { password: hashedNewPassword },
       );
+      return;
     } catch (e) {
       console.error('Update password operation error:', e);
       throw new HttpException(
-        'Server error, unable to update name',
+        'Server error, unable to update password',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -110,7 +124,8 @@ export class UsersService {
     }
 
     try {
-      return this.userRepository.delete({ id: userId });
+      await this.userRepository.delete({ id: userId });
+      return;
     } catch (e) {
       console.error('Delete operation error:', e);
       throw new HttpException(

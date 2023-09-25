@@ -7,6 +7,7 @@ import {
   Patch,
   Headers,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { DeleteUserDto } from './dto/delete-user.dto';
@@ -21,7 +22,7 @@ export class UsersController {
 
   @Patch('nickname')
   async updateName(
-    @Body() updateNickname: UpdateNicknameDto,
+    @Body(ValidationPipe) updateNickname: UpdateNicknameDto,
     @Headers('Authorization') bearerToken: string,
   ) {
     return await this.usersService.updateNickname(updateNickname, bearerToken);
@@ -29,7 +30,7 @@ export class UsersController {
 
   @Patch('password')
   async updatePassword(
-    @Body() updatePasswordDto: UpdatePasswordDto,
+    @Body(ValidationPipe) updatePasswordDto: UpdatePasswordDto,
     @Headers('Authorization') bearerToken: string,
   ) {
     return await this.usersService.updatePassword(
@@ -41,7 +42,7 @@ export class UsersController {
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
-    @Body() deleteUserDto: DeleteUserDto,
+    @Body(ValidationPipe) deleteUserDto: DeleteUserDto,
     @Headers('Authorization') bearerToken: string,
   ) {
     return await this.usersService.deleteUser(deleteUserDto, bearerToken);

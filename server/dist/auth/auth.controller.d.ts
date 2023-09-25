@@ -4,7 +4,7 @@ import { SignInDto } from './dto/signin.dto';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    create(signupDto: SignupDto): Promise<import("../typeorm/entities/User").User>;
+    create(signupDto: SignupDto): Promise<void>;
     signIn(signInDto: SignInDto): Promise<{
         token: string;
         nickname: string;

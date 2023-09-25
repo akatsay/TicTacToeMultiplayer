@@ -32,11 +32,18 @@ let AuthService = class AuthService {
             throw new common_1.HttpException('User with this nickname already exists', common_1.HttpStatus.BAD_REQUEST);
         }
         const hashedPassword = await bcrypt.hash(userDetails.password, 12);
-        const newUser = this.userRepository.create({
-            ...userDetails,
-            password: hashedPassword,
-        });
-        return await this.userRepository.save(newUser);
+        try {
+            const newUser = this.userRepository.create({
+                ...userDetails,
+                password: hashedPassword,
+            });
+            await this.userRepository.save(newUser);
+            return;
+        }
+        catch (e) {
+            console.error('Error saving new user: ', e);
+            throw new common_1.HttpException('Unable to sign create user', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     async signIn(signInDto) {
         const { nickname, password } = signInDto;

@@ -34,9 +34,10 @@ let UsersService = class UsersService {
             throw new common_1.HttpException('User does not exist', common_1.HttpStatus.BAD_REQUEST);
         }
         try {
-            return this.userRepository.update({
+            await this.userRepository.update({
                 id: userId,
             }, { nickname: userDetails.nickname });
+            return;
         }
         catch (e) {
             console.error('Update nickname operation error:', e);
@@ -52,19 +53,24 @@ let UsersService = class UsersService {
         if (!existingUser) {
             throw new common_1.HttpException('User does not exist', common_1.HttpStatus.BAD_REQUEST);
         }
-        const isMatch = await bcrypt.compare(userDetails.oldPassword, existingUser.password);
-        if (!isMatch) {
+        const isCurrentPasswordMatch = await bcrypt.compare(userDetails.oldPassword, existingUser.password);
+        if (!isCurrentPasswordMatch) {
             throw new common_1.HttpException('Incorrect old password, try again', common_1.HttpStatus.BAD_REQUEST);
+        }
+        const isNewPasswordSameAsOld = await bcrypt.compare(userDetails.newPassword, existingUser.password);
+        if (isNewPasswordSameAsOld) {
+            throw new common_1.HttpException('New password should be different from the old one', common_1.HttpStatus.BAD_REQUEST);
         }
         const hashedNewPassword = await bcrypt.hash(userDetails.newPassword, 12);
         try {
-            return this.userRepository.update({
+            await this.userRepository.update({
                 id: userId,
             }, { password: hashedNewPassword });
+            return;
         }
         catch (e) {
             console.error('Update password operation error:', e);
-            throw new common_1.HttpException('Server error, unable to update name', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new common_1.HttpException('Server error, unable to update password', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     async deleteUser(userDetails, bearerToken) {
@@ -81,7 +87,8 @@ let UsersService = class UsersService {
             throw new common_1.HttpException('Incorrect password, try again', common_1.HttpStatus.BAD_REQUEST);
         }
         try {
-            return this.userRepository.delete({ id: userId });
+            await this.userRepository.delete({ id: userId });
+            return;
         }
         catch (e) {
             console.error('Delete operation error:', e);

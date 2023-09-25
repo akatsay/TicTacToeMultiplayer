@@ -7,7 +7,7 @@ export declare class AuthService {
     private userRepository;
     private readonly jwtService;
     constructor(userRepository: Repository<User>, jwtService: JwtService);
-    signUp(userDetails: SignupDto): Promise<User>;
+    signUp(userDetails: SignupDto): Promise<void>;
     signIn(signInDto: SignInDto): Promise<{
         token: string;
         nickname: string;
