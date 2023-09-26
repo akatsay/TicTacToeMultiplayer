@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { toast, Slide } from 'react-toastify';
 import { AuthContext } from '../context/AuthContext';
-import { useHttp } from '../hooks/http.hook';
+import { useHttp } from '../hooks/useFetch';
 
 export const ChangeNameMenu = ({ showHideFlag, showChangeNameMenu, setShowChangeNameMenu }) => {
 

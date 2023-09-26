@@ -34,7 +34,9 @@ export class AuthService {
         password: hashedPassword,
       });
       await this.userRepository.save(newUser);
-      return;
+      return {
+        message: `${userDetails.nickname} signed up successfully`,
+      };
     } catch (e) {
       console.error('Error saving new user: ', e);
       throw new HttpException(
