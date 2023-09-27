@@ -5,6 +5,7 @@ import { useDetectOutsideClick } from '../hooks/useDetectOutsideClick';
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/scss/header.scss';
+import {toastWarning} from '../utils/toaster';
 
 export const Header = () => {
 
@@ -19,18 +20,7 @@ export const Header = () => {
 
   const logoutHandler = () => {
     auth.logout();
-    toast.warning('Logged out', {
-      style: {backgroundColor: '#555', color: 'white'},
-      position: 'bottom-right',
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-      transition: Slide,
-    });
+    toastWarning('Logged out');
   };
 
 

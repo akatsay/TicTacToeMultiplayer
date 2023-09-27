@@ -15,16 +15,16 @@ class UpdatePasswordDto {
 }
 exports.UpdatePasswordDto = UpdatePasswordDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Input your old Password' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'oldPassword$Input your old Password' }),
     __metadata("design:type", String)
 ], UpdatePasswordDto.prototype, "oldPassword", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Password cannot be blank' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'newPassword$Password cannot be blank' }),
     (0, class_validator_1.Length)(8, 30, {
-        message: 'New password should be between 8 and 30 characters',
+        message: 'newPassword$New password should be between 8 and 30 characters',
     }),
     (0, class_validator_1.Matches)(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
-        message: 'New Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+        message: 'newPassword$New Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
     }),
     __metadata("design:type", String)
 ], UpdatePasswordDto.prototype, "newPassword", void 0);

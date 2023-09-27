@@ -31,13 +31,15 @@ let UsersService = class UsersService {
             where: { id: userId },
         });
         if (!existingUser) {
-            throw new common_1.HttpException('User does not exist', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('nickname$User does not exist', common_1.HttpStatus.BAD_REQUEST);
         }
         try {
             await this.userRepository.update({
                 id: userId,
             }, { nickname: userDetails.nickname });
-            return;
+            return {
+                message: 'name changed successfull',
+            };
         }
         catch (e) {
             console.error('Update nickname operation error:', e);
@@ -55,18 +57,20 @@ let UsersService = class UsersService {
         }
         const isCurrentPasswordMatch = await bcrypt.compare(userDetails.oldPassword, existingUser.password);
         if (!isCurrentPasswordMatch) {
-            throw new common_1.HttpException('Incorrect old password, try again', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('oldPassword$Incorrect old password, try again', common_1.HttpStatus.BAD_REQUEST);
         }
         const isNewPasswordSameAsOld = await bcrypt.compare(userDetails.newPassword, existingUser.password);
         if (isNewPasswordSameAsOld) {
-            throw new common_1.HttpException('New password should be different from the old one', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('newPassword$New password should be different from the old one', common_1.HttpStatus.BAD_REQUEST);
         }
         const hashedNewPassword = await bcrypt.hash(userDetails.newPassword, 12);
         try {
             await this.userRepository.update({
                 id: userId,
             }, { password: hashedNewPassword });
-            return;
+            return {
+                message: 'password updated successfully',
+            };
         }
         catch (e) {
             console.error('Update password operation error:', e);
@@ -84,11 +88,13 @@ let UsersService = class UsersService {
         }
         const isMatch = await bcrypt.compare(userDetails.password, existingUser.password);
         if (!isMatch) {
-            throw new common_1.HttpException('Incorrect password, try again', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('password$Incorrect password, try again', common_1.HttpStatus.BAD_REQUEST);
         }
         try {
             await this.userRepository.delete({ id: userId });
-            return;
+            return {
+                message: 'User deleted successfully',
+            };
         }
         catch (e) {
             console.error('Delete operation error:', e);

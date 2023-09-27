@@ -29,7 +29,7 @@ let AuthService = class AuthService {
             nickname: userDetails.nickname,
         });
         if (existingUser) {
-            throw new common_1.HttpException('User with this nickname already exists', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('nickname$User with this nickname already exists', common_1.HttpStatus.BAD_REQUEST);
         }
         const hashedPassword = await bcrypt.hash(userDetails.password, 12);
         try {
@@ -44,18 +44,18 @@ let AuthService = class AuthService {
         }
         catch (e) {
             console.error('Error saving new user: ', e);
-            throw new common_1.HttpException('Unable to sign create user', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new common_1.HttpException('Unable to create user', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     async signIn(signInDto) {
         const { nickname, password } = signInDto;
         const existingUser = await this.userRepository.findOneBy({ nickname });
         if (!existingUser) {
-            throw new common_1.HttpException('User with this nickname does not exist', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('nickname$User with this nickname does not exist', common_1.HttpStatus.BAD_REQUEST);
         }
         const isMatch = await bcrypt.compare(password, existingUser.password);
         if (!isMatch) {
-            throw new common_1.HttpException('Incorrect password, try again', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException('password$Incorrect password, try again', common_1.HttpStatus.BAD_REQUEST);
         }
         try {
             const token = this.jwtService.sign({

@@ -48,7 +48,7 @@ export const AccountPage = () => {
           <ChangeNameMenu 
             showHideFlag = {showChangeNameMenu ? 'show' : 'hide'}
             showChangeNameMenu = {showChangeNameMenu}
-            setShowChangeNameMenu = {setShowChangeNameMenu}
+            setShowChangeNameMenu = {(flag: boolean) => setShowChangeNameMenu(flag)}
           /> 
 
           <div className="setting-wrapper setting-wrapper-toggle-type">
@@ -68,7 +68,7 @@ export const AccountPage = () => {
           <ChangePasswordMenu 
             showHideFlag = {showChangePasswordMenu ? 'show' : 'hide'}
             showChangePasswordMenu = {showChangePasswordMenu}
-            setShowChangePasswordMenu = {setShowChangePasswordMenu}
+            setShowChangePasswordMenu = {(flag: boolean) => setShowChangePasswordMenu(flag)}
           /> 
 
           <div className="setting-wrapper setting-wrapper-toggle-type">
@@ -76,17 +76,16 @@ export const AccountPage = () => {
               onClick={() => setOpenModal(true)}   
               className="delete-account-btn grow"
             >
-                            Delete My account
+              Delete My account
             </button>
           </div>
         </div>
         {
-          openModal 
-                        &&
-                    <Modal 
-                      open={openModal} 
-                      onClose={() => setOpenModal(false)}
-                    /> 
+          openModal &&
+          <Modal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+          />
         }
       </div>
     </>

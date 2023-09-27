@@ -26,7 +26,7 @@ function App() {
     <AuthContext.Provider value={{
       login, logout, token, userId, userName, userEmail, isAuthenticated
     }}>
-      <Router>
+      <Router basename={'/'}>
         <div className="container">
           <Header />
           {routes}

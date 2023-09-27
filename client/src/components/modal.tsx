@@ -1,54 +1,46 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
-import { toast, Slide } from 'react-toastify';
+import React, {useContext, useState, useEffect, useRef, MutableRefObject, ChangeEvent} from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useHttp } from '../hooks/useFetch';
+import {useFetch} from '../hooks/useFetch';
 
 import '../styles/scss/modal.scss';
+import {toastError, toastSuccess} from '../utils/toaster';
 
-export const Modal = ({ open, onClose }) => {
+interface IProps {
+  open: boolean
+  onClose: () => void
+}
+
+export const Modal = ({ open, onClose }: IProps) => {
 
   const auth = useContext(AuthContext);
-
-  const passwordRef = useRef(null);
-    
+  const passwordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const [disabledDelete, setDisabledDelete] = useState(true);
-    
   const [deletionForm, setDeletionForm] = useState({
-    password: '',
-    userId: auth.userId
+    password: ''
   });
-
-  const {loading, request, error, clearError} = useHttp();
+  const {loading, request, error, clearError} = useFetch();
 
   const handleEnableDelete = () => {
     setDisabledDelete(!disabledDelete);
   };
 
-  const passwordHandler = (event) => {
+  const passwordHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setDeletionForm({...deletionForm, [event.target.name]: event.target.value});
   };
 
   const deleteAccountHandler = async () => {
     try {
-      const data = await request('/api/account', 'delete', {...deletionForm}, {
-        Authorization: `Bearer ${auth.token}`
-      });
-      passwordRef.current.style.borderBottomColor = '';
+      const data: any = await request(
+        'http://localhost:5000/users',
+        {method: 'delete', body: { ...deletionForm }, headers: {Authorization: `Bearer ${auth.token}`}}
+      );
+      if (passwordRef.current) {
+        passwordRef.current.style.borderBottomColor = '';
+      }
       auth.logout();
-      toast.success(data.message, {
-        style: {backgroundColor: '#555', color: 'white'},
-        position: 'bottom-right',
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Slide,
-      });
+      toastSuccess(data.message);
     } catch (e) {
-            
+      return;
     }
   };
 
@@ -56,38 +48,14 @@ export const Modal = ({ open, onClose }) => {
     if (error) {
       if (error.message === 'No auth') {
         auth.logout();
-        toast.error('Session expired', {
-          style: {backgroundColor: '#555', color: 'white'},
-          position: 'bottom-right',
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
-        });
-            
+        toastError('Session expired');
       } else {
-
-        toast.error(error.message, {
-          style: {backgroundColor: '#555', color: 'white'},
-          position: 'bottom-right',
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Slide,
-        });
+        toastError(error.message);
       }
 
                 
       if (error.cause) {
-        if (error.cause.origin === 'password') {
+        if (error.cause === 'password' && passwordRef.current) {
           passwordRef.current.focus();
           passwordRef.current.style.borderBottomColor = '#FF7276';
         }
@@ -138,17 +106,14 @@ export const Modal = ({ open, onClose }) => {
           </div>
           <div className="modal-buttons-container">
             <button
-              disabled={ loading || disabledDelete ? true : false}
+              disabled={ loading || disabledDelete || !deletionForm.password}
               onClick={deleteAccountHandler}
             >
-                        Delete it!
+              Delete it!
             </button>
-            <button onClick={ () => {
-              onClose();
-            }
-            }
+            <button onClick={ () => { onClose();}}
             >
-                            Cancel
+              Cancel
             </button>
           </div>
         </div>

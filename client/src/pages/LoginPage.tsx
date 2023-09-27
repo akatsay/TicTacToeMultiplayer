@@ -6,11 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/scss/login&register.scss';
 import { toastError, toastSuccess } from '../utils/toaster';
 
-interface IAuthErrorMessageDetails {
-  origin?: string;
-  details?: string;
-}
-
 interface IFormState {
   nickname: string;
   password: string;
@@ -22,7 +17,7 @@ export const LoginPage: React.FC = () => {
   const passwordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const navigate = useNavigate();
   const { loading, request, error, clearError } = useFetch<any>();
-  const [authErrorMessageDetails, setAuthErrorMessageDetails] = useState<IAuthErrorMessageDetails>({});
+  const [authErrorMessageDetails, setAuthErrorMessageDetails] = useState<string | undefined>('');
   const [form, setForm] = useState<IFormState>({
     nickname: '',
     password: ''
@@ -32,18 +27,18 @@ export const LoginPage: React.FC = () => {
     if (error) {
       toastError(error.message);
       if (error.cause !== undefined && nicknameRef.current && passwordRef.current) {
-        if (error.cause.origin === 'nickname') {
+        if (error.cause === 'nickname') {
           nicknameRef.current.focus();
           nicknameRef.current.style.borderBottomColor = '#FF7276';
           passwordRef.current.style.borderBottomColor = '';
           passwordRef.current.value = '';
-        } else if (error.cause.origin === 'password') {
+        } else if (error.cause === 'password') {
           passwordRef.current.focus();
           nicknameRef.current.style.borderBottomColor = '';
           passwordRef.current.style.borderBottomColor = '#FF7276';
           passwordRef.current.value = '';
         }
-        setAuthErrorMessageDetails(error.cause);
+        setAuthErrorMessageDetails(error.message);
       }
       clearError();
     }
@@ -60,7 +55,7 @@ export const LoginPage: React.FC = () => {
       auth.login(data.token, data.userId, data.name, data.email);
       toastSuccess(data.message);
     } catch (e) {
-      toastError('Error logging in');
+      return;
     }
   };
 
@@ -111,16 +106,16 @@ export const LoginPage: React.FC = () => {
             <button
               className="auth-action-btn grow login"
               onClick={loginHandler}
-              disabled={loading}
+              disabled={loading || !form.nickname || !form.password}
             >
               Login
             </button>
           </div>
-          {Object.keys(authErrorMessageDetails).length === 0 ? null : (
+          {authErrorMessageDetails &&
             <div className="error-details">
-              * {authErrorMessageDetails.details}
+              * {authErrorMessageDetails}
             </div>
-          )}
+          }
         </div>
       </div>
     </>

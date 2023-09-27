@@ -15,12 +15,12 @@ class UpdateNicknameDto {
 }
 exports.UpdateNicknameDto = UpdateNicknameDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Input new nickname' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'nickname$Input new nickname' }),
     (0, class_validator_1.MinLength)(5, {
-        message: 'New nickname should be at least 5 characters long',
+        message: 'nickname$New nickname should be at least 5 characters long',
     }),
     (0, class_validator_1.MaxLength)(30, {
-        message: 'New nickname should be less than 30 characters long',
+        message: 'nickname$New nickname should be less than 30 characters long',
     }),
     __metadata("design:type", String)
 ], UpdateNicknameDto.prototype, "nickname", void 0);

@@ -15,7 +15,7 @@ class DeleteUserDto {
 }
 exports.DeleteUserDto = DeleteUserDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your password" }),
+    (0, class_validator_1.IsNotEmpty)({ message: "password$Don't forget your password" }),
     __metadata("design:type", String)
 ], DeleteUserDto.prototype, "password", void 0);
 //# sourceMappingURL=delete-user.dto.js.map

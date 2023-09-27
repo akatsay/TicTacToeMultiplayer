@@ -11,7 +11,7 @@ export const RegisterPage = () => {
   const passwordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const navigate = useNavigate();
   const {loading, request, error, clearError} = useFetch();
-  const [authErrorMessageDetails, setAuthErrorMessageDetails] = useState<any>({});
+  const [authErrorMessageDetails, setAuthErrorMessageDetails] = useState<string | undefined>('');
   const [form, setForm] = useState({
     nickname: '',
     password: ''
@@ -21,18 +21,18 @@ export const RegisterPage = () => {
     if (error) {
       toastError(error.message);
       if (error.cause !== undefined && nicknameRef.current && passwordRef.current) {
-        if (error.cause.origin === 'nickname') {
+        if (error.cause === 'nickname') {
           nicknameRef.current.focus();
           nicknameRef.current.style.borderBottomColor = '#FF7276';
           passwordRef.current.style.borderBottomColor = '';
           passwordRef.current.value = '';
-        } else if (error.cause.origin === 'password') {
+        } else if (error.cause === 'password') {
           passwordRef.current.focus();
           nicknameRef.current.style.borderBottomColor = '';
           passwordRef.current.style.borderBottomColor = '#FF7276';
           passwordRef.current.value = '';
         }
-        setAuthErrorMessageDetails(error.cause);
+        setAuthErrorMessageDetails(error.message);
       }
       clearError();
     }
@@ -49,7 +49,7 @@ export const RegisterPage = () => {
       navigate('/login');
       toastSuccess('Successfully signed up');
     } catch (e) {
-      toastError('Error signing up');
+      return;
     }
   };
 
@@ -94,24 +94,21 @@ export const RegisterPage = () => {
               className="auth-link" 
               onClick={() => {navigate('/login');}
               }>
-                        Login
+                Login
             </button>
           </div>
           <div className="auth-action">
             <button
               className="auth-action-btn grow register"
               onClick={registerHandler}
-              disabled={loading}
+              disabled={loading || !form.nickname || !form.password}
             >
               Register
             </button>
           </div>
-          { JSON.stringify(authErrorMessageDetails) === '{}'
-            ? 
-            null
-            :
+          { authErrorMessageDetails &&
             <div className="error-details">
-              * {authErrorMessageDetails.details}
+              {`* ${authErrorMessageDetails}`}
             </div>
           }
         </div>

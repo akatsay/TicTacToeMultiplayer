@@ -34,14 +34,22 @@ export const useFetch = <T>() => {
         const response = await fetch(url, options);
         const data = await response.json();
         if (!response.ok) {
-          if (data.message) {
-            setError({ message: data.error.message, cause: data.error.cause });
+          console.warn('hook says:' + data.message);
+          // it might be an array or just string
+          if (Array.isArray(data.message)) {
+            throw new Error(data.message[0]);
+          } else if (typeof data.message === 'string') {
+            throw new Error(data.message);
+          } else {
+            throw new Error('Unknown request error');
           }
         }
         setLoading(false);
         return data as T;
       } catch (e: any) {
+        console.warn('error in hook says: ' + e.message);
         setLoading(false);
+        setError({ message: e.message.split('$')[1], cause: e.message.split('$')[0] });
         throw e;
       }
     },

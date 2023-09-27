@@ -24,7 +24,10 @@ export class UsersService {
     });
 
     if (!existingUser) {
-      throw new HttpException('User does not exist', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'nickname$User does not exist',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     try {
@@ -34,7 +37,9 @@ export class UsersService {
         },
         { nickname: userDetails.nickname },
       );
-      return;
+      return {
+        message: 'name changed successfull',
+      };
     } catch (e) {
       console.error('Update nickname operation error:', e);
       throw new HttpException(
@@ -63,7 +68,7 @@ export class UsersService {
 
     if (!isCurrentPasswordMatch) {
       throw new HttpException(
-        'Incorrect old password, try again',
+        'oldPassword$Incorrect old password, try again',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -75,7 +80,7 @@ export class UsersService {
 
     if (isNewPasswordSameAsOld) {
       throw new HttpException(
-        'New password should be different from the old one',
+        'newPassword$New password should be different from the old one',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -89,7 +94,9 @@ export class UsersService {
         },
         { password: hashedNewPassword },
       );
-      return;
+      return {
+        message: 'password updated successfully',
+      };
     } catch (e) {
       console.error('Update password operation error:', e);
       throw new HttpException(
@@ -118,14 +125,16 @@ export class UsersService {
 
     if (!isMatch) {
       throw new HttpException(
-        'Incorrect password, try again',
+        'password$Incorrect password, try again',
         HttpStatus.BAD_REQUEST,
       );
     }
 
     try {
       await this.userRepository.delete({ id: userId });
-      return;
+      return {
+        message: 'User deleted successfully',
+      };
     } catch (e) {
       console.error('Delete operation error:', e);
       throw new HttpException(

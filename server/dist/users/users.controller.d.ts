@@ -5,7 +5,13 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
-    updateName(updateNickname: UpdateNicknameDto, bearerToken: string): Promise<void>;
-    updatePassword(updatePasswordDto: UpdatePasswordDto, bearerToken: string): Promise<void>;
-    delete(deleteUserDto: DeleteUserDto, bearerToken: string): Promise<void>;
+    updateName(updateNickname: UpdateNicknameDto, bearerToken: string): Promise<{
+        message: string;
+    }>;
+    updatePassword(updatePasswordDto: UpdatePasswordDto, bearerToken: string): Promise<{
+        message: string;
+    }>;
+    delete(deleteUserDto: DeleteUserDto, bearerToken: string): Promise<{
+        message: string;
+    }>;
 }

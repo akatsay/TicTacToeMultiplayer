@@ -8,7 +8,13 @@ export declare class UsersService {
     private userRepository;
     private readonly decodeJwt;
     constructor(userRepository: Repository<User>, decodeJwt: DecodeJwt);
-    updateNickname(userDetails: UpdateNicknameDto, bearerToken: string): Promise<void>;
-    updatePassword(userDetails: UpdatePasswordDto, bearerToken: string): Promise<void>;
-    deleteUser(userDetails: DeleteUserDto, bearerToken: string): Promise<void>;
+    updateNickname(userDetails: UpdateNicknameDto, bearerToken: string): Promise<{
+        message: string;
+    }>;
+    updatePassword(userDetails: UpdatePasswordDto, bearerToken: string): Promise<{
+        message: string;
+    }>;
+    deleteUser(userDetails: DeleteUserDto, bearerToken: string): Promise<{
+        message: string;
+    }>;
 }

@@ -15,12 +15,12 @@ class SignInDto {
 }
 exports.SignInDto = SignInDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your nickname" }),
+    (0, class_validator_1.IsNotEmpty)({ message: "nickname$Don't forget your nickname" }),
     __metadata("design:type", String)
 ], SignInDto.prototype, "nickname", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: "Don't forget your password" }),
-    (0, class_validator_1.IsString)({ message: 'Input password' }),
+    (0, class_validator_1.IsNotEmpty)({ message: "password$Don't forget your password" }),
+    (0, class_validator_1.IsString)({ message: 'password$Input password' }),
     __metadata("design:type", String)
 ], SignInDto.prototype, "password", void 0);
 //# sourceMappingURL=signin.dto.js.map

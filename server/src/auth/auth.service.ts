@@ -21,7 +21,7 @@ export class AuthService {
 
     if (existingUser) {
       throw new HttpException(
-        'User with this nickname already exists',
+        'nickname$User with this nickname already exists',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -40,7 +40,7 @@ export class AuthService {
     } catch (e) {
       console.error('Error saving new user: ', e);
       throw new HttpException(
-        'Unable to sign create user',
+        'Unable to create user',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -53,7 +53,7 @@ export class AuthService {
 
     if (!existingUser) {
       throw new HttpException(
-        'User with this nickname does not exist',
+        'nickname$User with this nickname does not exist',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -62,7 +62,7 @@ export class AuthService {
 
     if (!isMatch) {
       throw new HttpException(
-        'Incorrect password, try again',
+        'password$Incorrect password, try again',
         HttpStatus.BAD_REQUEST,
       );
     }
