@@ -38,7 +38,7 @@ let UsersService = class UsersService {
                 id: userId,
             }, { nickname: userDetails.nickname });
             return {
-                message: 'name changed successfull',
+                message: 'name changed successfully',
             };
         }
         catch (e) {

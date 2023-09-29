@@ -38,7 +38,7 @@ export class UsersService {
         { nickname: userDetails.nickname },
       );
       return {
-        message: 'name changed successfull',
+        message: 'name changed successfully',
       };
     } catch (e) {
       console.error('Update nickname operation error:', e);

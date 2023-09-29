@@ -31,7 +31,7 @@ export const Header = () => {
       <div ref={dropdownRef} className={`dropdown ${auth.isAuthenticated ? '' : 'hide'}`}>
         <button className="drop-trigger big" onClick={handleOpen}>
           <p>Logged in as:</p>
-          <i>{auth.userEmail}</i>
+          <i>{auth.nickname}</i>
         </button>
         <button className="drop-trigger small" onClick={handleOpen}>
           <span></span>

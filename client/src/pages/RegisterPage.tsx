@@ -45,7 +45,7 @@ export const RegisterPage = () => {
   const registerHandler = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const data = await request('http://localhost:5000/auth/signup', {method: 'post', body: { ...form }});
+      const data = await request('/auth/signup', {method: 'post', body: { ...form }});
       navigate('/login');
       toastSuccess('Successfully signed up');
     } catch (e) {

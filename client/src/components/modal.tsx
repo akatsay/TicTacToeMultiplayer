@@ -4,6 +4,7 @@ import {useFetch} from '../hooks/useFetch';
 
 import '../styles/scss/modal.scss';
 import {toastError, toastSuccess} from '../utils/toaster';
+import {useNavigate} from 'react-router-dom';
 
 interface IProps {
   open: boolean
@@ -31,7 +32,7 @@ export const Modal = ({ open, onClose }: IProps) => {
   const deleteAccountHandler = async () => {
     try {
       const data: any = await request(
-        'http://localhost:5000/users',
+        '/users',
         {method: 'delete', body: { ...deletionForm }, headers: {Authorization: `Bearer ${auth.token}`}}
       );
       if (passwordRef.current) {

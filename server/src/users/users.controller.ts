@@ -2,9 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  HttpCode,
-  HttpStatus,
-  Patch,
+  Put,
   Headers,
   UseGuards,
   ValidationPipe,
@@ -20,7 +18,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Patch('nickname')
+  @Put('nickname')
   async updateName(
     @Body(ValidationPipe) updateNickname: UpdateNicknameDto,
     @Headers('Authorization') bearerToken: string,
@@ -28,7 +26,7 @@ export class UsersController {
     return await this.usersService.updateNickname(updateNickname, bearerToken);
   }
 
-  @Patch('password')
+  @Put('password')
   async updatePassword(
     @Body(ValidationPipe) updatePasswordDto: UpdatePasswordDto,
     @Headers('Authorization') bearerToken: string,
@@ -40,7 +38,6 @@ export class UsersController {
   }
 
   @Delete()
-  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
     @Body(ValidationPipe) deleteUserDto: DeleteUserDto,
     @Headers('Authorization') bearerToken: string,

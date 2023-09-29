@@ -89,7 +89,7 @@
   background-color: $fifth;
 }
 
-.auth-action-btn:disabled {
+.auth-action-btn:disabled, {
   transition: none !important;
   transform: none !important;
   cursor: default;

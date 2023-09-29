@@ -31,8 +31,8 @@ export const ChangePasswordMenu = ({ showHideFlag, showChangePasswordMenu , setS
   const passwordChangeSubmitHandler = async () => {
     try {
       const data: any = await request(
-        'http://localhost:5000/users/password',
-        {method: 'patch', body: { ...passwordForm }, headers: {Authorization: `Bearer ${auth.token}`}}
+        '/users/password',
+        {method: 'put', body: { ...passwordForm }, headers: {Authorization: `Bearer ${auth.token}`}}
       );
       setChangePasswordErrorMessageDetails('');
       if (oldPasswordRef.current && newPasswordRef.current) {
@@ -112,7 +112,7 @@ export const ChangePasswordMenu = ({ showHideFlag, showChangePasswordMenu , setS
         <button 
           className="submit-button grow"
           onClick={() => {console.log(loading); passwordChangeSubmitHandler();}}
-          disabled={loading ? true : false}
+          disabled={loading || !passwordForm.newPassword || !passwordForm.oldPassword}
         >
                 Change it!
         </button>

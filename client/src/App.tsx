@@ -14,7 +14,7 @@ import React from 'react';
 
 function App() {
 
-  const {login, logout, token, userId, userName, userEmail, ready} = useAuth();
+  const {login, logout, token, nickname, ready} = useAuth();
   const isAuthenticated = !!token;
   const routes = useRoutes(isAuthenticated);
 
@@ -24,7 +24,7 @@ function App() {
 
   return (
     <AuthContext.Provider value={{
-      login, logout, token, userId, userName, userEmail, isAuthenticated
+      login, logout, token, nickname, isAuthenticated
     }}>
       <Router basename={'/'}>
         <div className="container">

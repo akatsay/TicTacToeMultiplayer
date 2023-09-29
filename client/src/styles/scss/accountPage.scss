@@ -29,11 +29,6 @@
   color: $fifth;
 }
 
-.submit-button {
-  margin-top: 1rem;
-  margin-left: 1rem;
-}
-
 .page-title {
   text-align: center;
   margin: 40px 0 20px 0;
@@ -69,6 +64,18 @@
   font-size: 1.2rem;
   border-radius: 10px;
   border: none;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
+.submit-button:disabled, {
+  transition: none !important;
+  transform: none !important;
+  cursor: default;
+  opacity: 0.6;
+  &:hover {
+    background-color: $primary;
+  }
 }
 
 .change-btn:hover, .submit-button:hover {

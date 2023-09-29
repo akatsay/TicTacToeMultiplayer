@@ -51,8 +51,8 @@ export const LoginPage: React.FC = () => {
   const loginHandler = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const data = await request('http://localhost:5000/auth/signin', {method: 'post', body: { ...form }});
-      auth.login(data.token, data.userId, data.name, data.email);
+      const data = await request('/auth/signin', {method: 'post', body: { ...form }});
+      auth.login(data.token, data.userId);
       toastSuccess(data.message);
     } catch (e) {
       return;

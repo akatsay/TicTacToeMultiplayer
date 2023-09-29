@@ -2,44 +2,44 @@ import {useState, useCallback, useEffect} from 'react';
 
 const storageName = 'userData';
 
+interface ISessionsStorageObject {
+  token: string,
+  nickname: string,
+}
+
 export const useAuth = () => {
 
-  const [token, setToken] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null);
-  const [userEmail, setUserEmail] = useState(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string | null>(null);
 
   const [ready, setReady] = useState(false);
 
-  const login = useCallback((jwtToken, id, name, email) => {
+  const login = useCallback((jwtToken: string, nickname: string) => {
     setToken(jwtToken);
-    setUserId(id);
-    setUserName(name);
-    setUserEmail(email);
+    setNickname(nickname);
 
     sessionStorage.setItem(storageName, JSON.stringify({
-      userId: id, token: jwtToken, userName: name, userEmail: email
+      token: jwtToken, nickname: nickname,
     }));
   }, []);
 
   const logout = useCallback(() => {
     setToken(null);
-    setUserId(null);
-    setUserName(null);
-    setUserEmail(null);
+    setNickname(null);
     sessionStorage.removeItem(storageName);
   }, []);
 
   useEffect(() => {
-    const data = JSON.parse(sessionStorage.getItem(storageName));
+    const storedData: string | null = sessionStorage.getItem(storageName);
+    const data: ISessionsStorageObject = JSON.parse(storedData ?? '{}');
 
     if (data && data.token) {
-      login(data.token, data.userId, data.userName, data.userEmail);
+      login(data.token, data.nickname);
     }
 
     setReady(true);
 
   }, [login]);
 
-  return {login, logout, token, userId, userName, userEmail, ready};
+  return {login, logout, token, nickname, ready};
 };

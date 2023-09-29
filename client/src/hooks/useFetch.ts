@@ -24,6 +24,8 @@ export const useFetch = <T>() => {
 
   const request = useCallback(
     async (url: string, options: IRequestOptions = {}) => {
+      const baseUrl = 'http://localhost:5000';
+      const fullUrl = baseUrl + url;
       setLoading(true);
       try {
         if (options.body) {
@@ -31,7 +33,7 @@ export const useFetch = <T>() => {
           options.headers = { ...options.headers, 'Content-Type': 'application/json' };
         }
 
-        const response = await fetch(url, options);
+        const response = await fetch(fullUrl, options);
         const data = await response.json();
         if (!response.ok) {
           console.warn('hook says:' + data.message);
