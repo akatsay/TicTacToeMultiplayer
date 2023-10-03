@@ -1,4 +1,8 @@
 import {useState, useCallback, useEffect} from 'react';
+import {useSelector} from 'react-redux';
+import {selectAuthStatus, selectNickname, selectToken} from '../redux/reducers/authReducer';
+import {useAppDispatch} from '../redux/store';
+import { appLogin, appLogout } from '../redux/reducers/authReducer';
 
 const storageName = 'userData';
 
@@ -9,23 +13,23 @@ interface ISessionsStorageObject {
 
 export const useAuth = () => {
 
-  const [token, setToken] = useState<string | null>(null);
-  const [nickname, setNickname] = useState<string | null>(null);
+  const token = useSelector(selectToken);
+  const nickname = useSelector(selectNickname);
+  const isAuthenticated = useSelector(selectAuthStatus);
+  const appDispatch = useAppDispatch();
 
   const [ready, setReady] = useState(false);
 
   const login = useCallback((jwtToken: string, nickname: string) => {
-    setToken(jwtToken);
-    setNickname(nickname);
-
+    appDispatch(appLogin({jwtToken, nickname}));
     sessionStorage.setItem(storageName, JSON.stringify({
       token: jwtToken, nickname: nickname,
     }));
+
   }, []);
 
   const logout = useCallback(() => {
-    setToken(null);
-    setNickname(null);
+    appDispatch(appLogout());
     sessionStorage.removeItem(storageName);
   }, []);
 
@@ -41,5 +45,5 @@ export const useAuth = () => {
 
   }, [login]);
 
-  return {login, logout, token, nickname, ready};
+  return {login, logout, token, nickname, isAuthenticated, ready};
 };

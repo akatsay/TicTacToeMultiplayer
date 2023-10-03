@@ -1,10 +1,9 @@
-import React, {useContext, useState, useEffect, useRef, MutableRefObject, ChangeEvent} from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState, useEffect, useRef, MutableRefObject, ChangeEvent} from 'react';
 import {useFetch} from '../hooks/useFetch';
 
 import '../styles/scss/modal.scss';
 import {toastError, toastSuccess} from '../utils/toaster';
-import {useNavigate} from 'react-router-dom';
+import {useAuth} from '../hooks/auth.hook';
 
 interface IProps {
   open: boolean
@@ -13,7 +12,7 @@ interface IProps {
 
 export const Modal = ({ open, onClose }: IProps) => {
 
-  const auth = useContext(AuthContext);
+  const { token, logout } = useAuth();
   const passwordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const [disabledDelete, setDisabledDelete] = useState(true);
   const [deletionForm, setDeletionForm] = useState({
@@ -33,12 +32,12 @@ export const Modal = ({ open, onClose }: IProps) => {
     try {
       const data: any = await request(
         '/users',
-        {method: 'delete', body: { ...deletionForm }, headers: {Authorization: `Bearer ${auth.token}`}}
+        {method: 'delete', body: { ...deletionForm }, headers: {Authorization: `Bearer ${token}`}}
       );
       if (passwordRef.current) {
         passwordRef.current.style.borderBottomColor = '';
       }
-      auth.logout();
+      logout();
       toastSuccess(data.message);
     } catch (e) {
       return;
@@ -48,7 +47,7 @@ export const Modal = ({ open, onClose }: IProps) => {
   useEffect(() => {
     if (error) {
       if (error.message === 'No auth') {
-        auth.logout();
+        logout();
         toastError('Session expired');
       } else {
         toastError(error.message);
@@ -63,7 +62,7 @@ export const Modal = ({ open, onClose }: IProps) => {
         clearError();
       }
     }
-  }, [error, clearError, auth]);
+  }, [error, clearError, token]);
 
   if (!open) return null;
 

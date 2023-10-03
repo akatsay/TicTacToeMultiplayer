@@ -1,11 +1,10 @@
-import React, { useContext, useRef } from 'react';
-import { toast, Slide } from 'react-toastify';
-import { AuthContext } from '../context/AuthContext';
+import React, { useRef } from 'react';
 import { useDetectOutsideClick } from '../hooks/useDetectOutsideClick';
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/scss/header.scss';
 import {toastWarning} from '../utils/toaster';
+import {useAuth} from '../hooks/auth.hook';
 
 export const Header = () => {
 
@@ -14,12 +13,12 @@ export const Header = () => {
   
   const [open, setOpen] = useDetectOutsideClick(dropdownRef, false);
 
-  const auth = useContext(AuthContext);
+  const { logout, nickname, isAuthenticated } = useAuth();
 
   const handleOpen = () => setOpen(!open);
 
   const logoutHandler = () => {
-    auth.logout();
+    logout();
     toastWarning('Logged out');
   };
 
@@ -28,10 +27,12 @@ export const Header = () => {
   return (
     <nav className="navbar">
       <div className="brand-title">Authentication</div>
-      <div ref={dropdownRef} className={`dropdown ${auth.isAuthenticated ? '' : 'hide'}`}>
+      <div
+        ref={dropdownRef} className={`dropdown ${isAuthenticated ? '' : 'hide'}`}
+      >
         <button className="drop-trigger big" onClick={handleOpen}>
           <p>Logged in as:</p>
-          <i>{auth.nickname}</i>
+          <i>{nickname}</i>
         </button>
         <button className="drop-trigger small" onClick={handleOpen}>
           <span></span>

@@ -1,8 +1,9 @@
-import React, {useContext, useState, useEffect, useRef, ChangeEvent, MutableRefObject} from 'react';
-import { toast, Slide } from 'react-toastify';
-import { AuthContext } from '../context/AuthContext';
+import React, {useState, useEffect, useRef, ChangeEvent, MutableRefObject} from 'react';
 import { useFetch } from '../hooks/useFetch';
 import {toastError, toastSuccess} from '../utils/toaster';
+import {useAuth} from '../hooks/auth.hook';
+import {useAppDispatch} from '../redux/store';
+import {updateNickname} from '../redux/reducers/authReducer';
 
 interface IProps {
   showHideFlag: 'show' | 'hide'
@@ -11,8 +12,9 @@ interface IProps {
 }
 export const ChangeNameMenu = ({ showHideFlag, showChangeNameMenu, setShowChangeNameMenu }: IProps) => {
 
+  const appDispatch = useAppDispatch();
   const nameRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
-  const auth = useContext(AuthContext);
+  const { logout, token, nickname } = useAuth();
   const [changeNameErrorMessageDetails, setChangeNameErrorMessageDetails] = useState<string | undefined>('');
   const {loading, request, error, clearError} = useFetch();
 
@@ -28,9 +30,9 @@ export const ChangeNameMenu = ({ showHideFlag, showChangeNameMenu, setShowChange
     try {
       const data: any = await request(
         '/users/nickname',
-        {method: 'put', body: { ...nameForm }, headers: {Authorization: `Bearer ${auth.token}`}}
+        {method: 'put', body: { ...nameForm }, headers: {Authorization: `Bearer ${token}`}}
       );
-      auth.nickname = nameForm.nickname;
+      appDispatch(updateNickname({nickname: nameForm.nickname}));
       setChangeNameErrorMessageDetails('');
       if(nameRef.current) {
         nameRef.current.style.borderBottomColor = '';
@@ -46,7 +48,7 @@ export const ChangeNameMenu = ({ showHideFlag, showChangeNameMenu, setShowChange
   useEffect(() => {
     if (error) {
       if (error.message === 'Forbidden resource') {
-        auth.logout();
+        logout();
         toastError('Session expired');
       } else {
         toastError(error.message);
@@ -60,7 +62,7 @@ export const ChangeNameMenu = ({ showHideFlag, showChangeNameMenu, setShowChange
       } 
     }
     clearError();
-  }, [error, clearError, auth]);
+  }, [error, clearError, token]);
 
   useEffect(() => {
     if (nameRef.current) {
@@ -82,7 +84,7 @@ export const ChangeNameMenu = ({ showHideFlag, showChangeNameMenu, setShowChange
           autoComplete="off"
           value={nameForm.nickname}
           onChange={NameChangeHandler}
-          placeholder={auth.nickname as string | undefined}
+          placeholder={nickname as string | undefined}
         />
         <button 
           className="submit-button grow"

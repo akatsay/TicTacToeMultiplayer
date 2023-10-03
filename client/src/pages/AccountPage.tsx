@@ -1,5 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -8,10 +7,11 @@ import { ChangePasswordMenu } from '../components/changePasswordMenu';
 import { Modal } from '../components/modal';
 
 import '../styles/scss/accountPage.scss';
+import {useAuth} from '../hooks/auth.hook';
 
 export const AccountPage = () => {
 
-  const auth = useContext(AuthContext);
+  const { nickname } = useAuth();
   const [showChangeNameMenu, setShowChangeNameMenu] = useState(false);
   const [showChangePasswordMenu, setShowChangePasswordMenu] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -25,13 +25,8 @@ export const AccountPage = () => {
         <h1 className="page-title">Account settings</h1>
         <div className="settings-container">
           <div className="setting-wrapper">
-            <label className="setting-label">Your email: </label>
-            <label className="parameter-label">{auth.userEmail}</label>
-            <button className="pustishka">Change</button>
-          </div>
-          <div className="setting-wrapper">
-            <label className="setting-label">Your name: </label>
-            <label className="parameter-label">{auth.userName}</label>
+            <label className="setting-label">Your nickname: </label>
+            <label className="parameter-label">{nickname}</label>
             <button 
               onClick={() => 
               {

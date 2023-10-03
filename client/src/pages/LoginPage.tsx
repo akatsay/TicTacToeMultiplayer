@@ -1,10 +1,10 @@
-import React, { MutableRefObject, useContext, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, { MutableRefObject, useEffect, useRef, useState, ChangeEvent, FormEvent } from 'react';
 import { useFetch } from '../hooks/useFetch';
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/scss/login&register.scss';
 import { toastError, toastSuccess } from '../utils/toaster';
+import {useAuth} from '../hooks/auth.hook';
 
 interface IFormState {
   nickname: string;
@@ -12,7 +12,7 @@ interface IFormState {
 }
 
 export const LoginPage: React.FC = () => {
-  const auth = useContext(AuthContext);
+  const { login } = useAuth();
   const nicknameRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const passwordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       const data = await request('/auth/signin', {method: 'post', body: { ...form }});
-      auth.login(data.token, data.userId);
+      login(data.token, data.nickname);
       toastSuccess(data.message);
     } catch (e) {
       return;

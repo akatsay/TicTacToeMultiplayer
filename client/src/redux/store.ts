@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import authReducer from './reducers/authReducer';
 
 const reducers = combineReducers({
-  authReducer
+  auth: authReducer
 });
 
 
@@ -11,6 +11,7 @@ const reducers = combineReducers({
 const store = configureStore({
   reducer: reducers,
 });
+
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 export const useAppDispatch = () => useDispatch<AppDispatch>();

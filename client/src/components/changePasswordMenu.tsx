@@ -1,7 +1,7 @@
-import React, {useContext, useState, useEffect, useRef, ChangeEvent, MutableRefObject} from 'react';
-import { AuthContext } from '../context/AuthContext';
+import React, {useState, useEffect, useRef, ChangeEvent, MutableRefObject} from 'react';
 import { useFetch } from '../hooks/useFetch';
 import {toastError, toastSuccess} from '../utils/toaster';
+import {useAuth} from '../hooks/auth.hook';
 
 interface IProps {
   showHideFlag: 'show' | 'hide'
@@ -11,9 +11,8 @@ interface IProps {
 
 export const ChangePasswordMenu = ({ showHideFlag, showChangePasswordMenu , setShowChangePasswordMenu}: IProps) => {
 
-  const auth = useContext(AuthContext);
   const {loading, request, error, clearError} = useFetch();
-
+  const { token, logout } = useAuth();
   const oldPasswordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
   const newPasswordRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
 
@@ -32,7 +31,7 @@ export const ChangePasswordMenu = ({ showHideFlag, showChangePasswordMenu , setS
     try {
       const data: any = await request(
         '/users/password',
-        {method: 'put', body: { ...passwordForm }, headers: {Authorization: `Bearer ${auth.token}`}}
+        {method: 'put', body: { ...passwordForm }, headers: {Authorization: `Bearer ${token}`}}
       );
       setChangePasswordErrorMessageDetails('');
       if (oldPasswordRef.current && newPasswordRef.current) {
@@ -50,7 +49,7 @@ export const ChangePasswordMenu = ({ showHideFlag, showChangePasswordMenu , setS
   useEffect(() => {
     if (error) {
       if (error.message === 'Forbidden resource') {
-        auth.logout();
+        logout();
         toastError('Session expired');
       } else {
         toastError(error.message);
@@ -71,7 +70,7 @@ export const ChangePasswordMenu = ({ showHideFlag, showChangePasswordMenu , setS
       }
       clearError();
     }
-  }, [error, clearError, auth]);
+  }, [error, clearError, token]);
 
   useEffect(() => {
     if (oldPasswordRef.current && newPasswordRef.current) {
