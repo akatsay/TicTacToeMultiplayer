@@ -14,6 +14,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("./typeorm/entities/User");
 const users_module_1 = require("./users/users.module");
 const auth_module_1 = require("./auth/auth.module");
+const game_gateway_1 = require("./game/game.gateway");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -21,20 +22,20 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forRoot({
-                type: 'mysql',
-                host: 'localhost',
+                type: "mysql",
+                host: "localhost",
                 port: 3306,
-                username: 'root',
-                password: 'root',
+                username: "root",
+                password: "root",
                 synchronize: true,
-                database: 'tictactoemysql',
+                database: "tictactoemysql",
                 entities: [User_1.User],
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, game_gateway_1.GameGateway],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, ChangeEvent, MutableRefObject} from 'react';
-import { useFetch } from '../hooks/useFetch';
-import {toastError, toastSuccess} from '../utils/toaster';
-import {useAuth} from '../hooks/auth.hook';
+import { useFetch } from '../../hooks/useFetch';
+import {toastError, toastSuccess} from '../../utils/toaster';
+import {useAuth} from '../../hooks/auth.hook';
 
 interface IProps {
   showHideFlag: 'show' | 'hide'

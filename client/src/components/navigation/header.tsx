@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
-import { useDetectOutsideClick } from '../hooks/useDetectOutsideClick';
+import { useDetectOutsideClick } from '../../hooks/useDetectOutsideClick';
 import { useNavigate } from 'react-router-dom';
 
-import '../styles/scss/header.scss';
-import {toastWarning} from '../utils/toaster';
-import {useAuth} from '../hooks/auth.hook';
+import '../../styles/scss/header.scss';
+import {toastWarning} from '../../utils/toaster';
+import {useAuth} from '../../hooks/auth.hook';
 
 export const Header = () => {
 

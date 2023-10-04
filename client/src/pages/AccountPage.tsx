@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-import { ChangeNameMenu } from '../components/changeNameMenu';
-import { ChangePasswordMenu } from '../components/changePasswordMenu';
-import { Modal } from '../components/modal';
+import { ChangeNameMenu } from '../components/settings/changeNameMenu';
+import { ChangePasswordMenu } from '../components/settings/changePasswordMenu';
+import { Modal } from '../components/settings/modal';
 
 import '../styles/scss/accountPage.scss';
 import {useAuth} from '../hooks/auth.hook';

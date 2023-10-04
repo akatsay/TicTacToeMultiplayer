@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useRef, ChangeEvent, MutableRefObject} from 'react';
-import { useFetch } from '../hooks/useFetch';
-import {toastError, toastSuccess} from '../utils/toaster';
-import {useAuth} from '../hooks/auth.hook';
-import {useAppDispatch} from '../redux/store';
-import {updateNickname} from '../redux/reducers/authReducer';
+import { useFetch } from '../../hooks/useFetch';
+import {toastError, toastSuccess} from '../../utils/toaster';
+import {useAuth} from '../../hooks/auth.hook';
+import {useAppDispatch} from '../../redux/store';
+import {updateNickname} from '../../redux/reducers/authReducer';
 
 interface IProps {
   showHideFlag: 'show' | 'hide'

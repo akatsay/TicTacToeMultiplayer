@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, MutableRefObject, ChangeEvent} from 'react';
-import {useFetch} from '../hooks/useFetch';
+import {useFetch} from '../../hooks/useFetch';
 
-import '../styles/scss/modal.scss';
-import {toastError, toastSuccess} from '../utils/toaster';
-import {useAuth} from '../hooks/auth.hook';
+import '../../styles/scss/modal.scss';
+import {toastError, toastSuccess} from '../../utils/toaster';
+import {useAuth} from '../../hooks/auth.hook';
 
 interface IProps {
   open: boolean
