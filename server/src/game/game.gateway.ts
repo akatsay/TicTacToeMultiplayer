@@ -13,20 +13,27 @@ export class GameGateway {
     server: Server;
 
   handleConnection(client: any) {
-    this.server.emit('connected', 'client connected');
+    this.server.emit('connected', 'Connected to game server');
     console.log('connected:' + client.id);
   }
 
   handleDisconnect(client: any) {
-    this.server.emit('disconnected', 'client disconnected');
+    this.server.emit('disconnected', 'Disconnected from game server');
     console.log('disconnected:' + client.id);
   }
 
+  // @SubscribeMessage('join-room')
+  // handleMessage(
+  //   @MessageBody() room: string,
+  //     @ConnectedSocket() client: Socket,
+  // ): void {
+  //   this.server.socketsJoin(room);
+  // }
   @SubscribeMessage('send-chat-message')
   handleMessage(
-    @MessageBody() data: string,
+    @MessageBody() chatMessage: string,
       @ConnectedSocket() client: Socket,
   ): void {
-    this.server.emit('receive-chat-message', `hello from ${client.id}, message is ${data}`);
+    this.server.emit('receive-chat-message', `hello from ${client.id}, message is ${chatMessage}`);
   }
 }

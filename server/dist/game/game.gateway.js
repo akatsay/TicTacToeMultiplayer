@@ -17,15 +17,15 @@ const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 let GameGateway = class GameGateway {
     handleConnection(client) {
-        this.server.emit('connected', 'client connected');
+        this.server.emit('connected', 'Connected to game server');
         console.log('connected:' + client.id);
     }
     handleDisconnect(client) {
-        this.server.emit('disconnected', 'client disconnected');
+        this.server.emit('disconnected', 'Disconnected from game server');
         console.log('disconnected:' + client.id);
     }
-    handleMessage(data, client) {
-        this.server.emit('receive-chat-message', `hello from ${client.id}, message is ${data}`);
+    handleMessage(chatMessage, client) {
+        this.server.emit('receive-chat-message', `hello from ${client.id}, message is ${chatMessage}`);
     }
 };
 exports.GameGateway = GameGateway;

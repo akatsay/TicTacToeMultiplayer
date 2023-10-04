@@ -2,7 +2,7 @@ import React from 'react';
 import {Routes, Route, Navigate} from 'react-router-dom';
 import {LoginPage} from './pages/LoginPage';
 import {RegisterPage} from './pages/RegisterPage';
-import {HomePage} from './pages/HomePage';
+import {GamePage} from './pages/GamePage';
 import { AccountPage } from './pages/AccountPage';
 
 export const useRoutes = (isAuthenticated: boolean) => {
@@ -10,7 +10,7 @@ export const useRoutes = (isAuthenticated: boolean) => {
   if (isAuthenticated) {
     return (
       <Routes>
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/home" element={<GamePage />} />
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/account" element={<AccountPage/>} />
         <Route path="*" element={<Navigate replace to="/" />}  />
