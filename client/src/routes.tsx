@@ -10,8 +10,8 @@ export const useRoutes = (isAuthenticated: boolean) => {
   if (isAuthenticated) {
     return (
       <Routes>
-        <Route path="/home" element={<GamePage />} />
-        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/game" element={<GamePage />} />
+        <Route path="/" element={<Navigate to="/game" />} />
         <Route path="/account" element={<AccountPage/>} />
         <Route path="*" element={<Navigate replace to="/" />}  />
       </Routes>

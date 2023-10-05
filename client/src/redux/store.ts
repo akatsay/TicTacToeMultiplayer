@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import authReducer from './reducers/authReducer';
+import gameSessionReducer from './reducers/gameSessionReducer';
 
 const reducers = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  gameSession: gameSessionReducer
 });
 
 

@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState, useMemo, useCallback} from 'react';
 
 import '../styles/scss/GamePage.scss';
-import {useAuth} from '../hooks/auth.hook';
 import { io } from 'socket.io-client';
 import {toastSuccess, toastWarning} from '../utils/toaster';
 import {GameInitialize} from '../components/game/GameInitialize';
@@ -10,7 +9,10 @@ import {GameStarted} from '../components/game/GameStarted';
 export const GamePage = () => {
 
   const [gameStarted, setGameStarted] = useState(false);
-  const socket = io('http://localhost:5000');
+  const socket = useMemo(() => io('http://localhost:5000'), []);
+
+  const handleFinishGame = useCallback(() => setGameStarted(false), []);
+  const handleStartGame = useCallback(() => setGameStarted(true), []);
 
   // const sendMessage = () => {
   //   socket.emit('send-chat-message', 'test');
@@ -27,6 +29,7 @@ export const GamePage = () => {
 
     return () => {
       socket.disconnect();
+      socket.off('connected');
       gameStarted && toastWarning('Disconnected from game server');
     };
 
@@ -37,9 +40,9 @@ export const GamePage = () => {
       <div className="homepage-container">
         {
           gameStarted ?
-            <GameStarted socket={socket} />
+            <GameStarted socket={socket} onFinishGame={handleFinishGame} />
             :
-            <GameInitialize socket={socket} onStartGame={() => setGameStarted(true)} />
+            <GameInitialize socket={socket} onStartGame={handleStartGame} />
         }
       </div>
     </>

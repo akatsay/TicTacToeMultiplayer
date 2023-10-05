@@ -1,65 +1,63 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
+import {ChangeEvent, FormEvent, useEffect, useState, memo} from 'react';
 import {Socket} from 'socket.io-client';
-import {toastSuccess} from '../../utils/toaster';
+import {toastError, toastSuccess} from '../../utils/toaster';
+import {useAppDispatch} from '../../redux/store';
+import {joinGameSession} from '../../redux/reducers/gameSessionReducer';
 
 interface IProps {
-  socket: Socket //  Socket<DefaultEventsMap, DefaultEventsMap>
+  socket: Socket
   onStartGame: () => void
 }
-export const GameInitialize = ({ socket, onStartGame }: IProps) => {
+export const GameInitialize = memo(({ socket, onStartGame }: IProps) => {
 
-  const [initForm, setInitForm] = useState({
-    roomCreate: '',
-    roomJoin: ''
-  });
+  const appDispatch = useAppDispatch();
+  const [room, setRoom] = useState('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInitForm({
-      ...initForm,
-      [e.target.name]: e.target.value
-    });
+    setRoom(e.target.value);
   };
 
   const handleCreateNewRoom = (e: FormEvent) => {
     e.preventDefault();
-    socket.emit('join-room', initForm.roomCreate);
-    onStartGame();
-    toastSuccess(`Created room ${initForm.roomCreate}`);
+    socket.emit('join-room', room);
   };
 
   const handleJoinRoom = (e: FormEvent) => {
     e.preventDefault();
-    socket.emit('join-room', initForm.roomJoin);
-    onStartGame();
-    toastSuccess(`Joined room ${initForm.roomJoin}`);
-
+    socket.emit('join-room', room);
   };
+
+  useEffect(() => {
+    socket.on('join-room-success', room => {
+      appDispatch(joinGameSession({room: room}));
+      onStartGame();
+      console.log(room);
+      toastSuccess(`Joined room ${room}`);
+    });
+    socket.on('room-full', room => {
+      toastError(`Room ${room} is full`);
+    });
+
+    return () => {
+      socket.off('join-room-success');
+      socket.off('room-full');
+    };
+
+  }, [socket]);
 
   return (
     <>
       <h2>Welcome to TicTacToe!</h2>
-      <form className='init-game-form' >
-        <h3>You can:</h3>
-        <label>Create new game room to play</label>
-        <input
-          name='roomCreate'
-          value={initForm.roomCreate}
-          placeholder='Input name for your room'
-          onChange={handleChange}
-        />
-        <button disabled={!initForm.roomCreate} className='game-action-btn' onClick={handleCreateNewRoom} >Create room</button>
-      </form>
-      <h3>Or</h3>
       <form className='init-game-form'>
-        <label>Join existing game room</label>
+        <label>To play simply enter the room name</label>
         <input
           name='roomJoin'
-          value={initForm.roomJoin}
-          placeholder='Input name of the existing room'
+          value={room}
+          placeholder='Input room name'
           onChange={handleChange}
         />
-        <button disabled={!initForm.roomJoin} className='game-action-btn' onClick={handleJoinRoom} >Join room</button>
+        <button disabled={!room} className='game-action-btn' onClick={handleJoinRoom} >Play</button>
       </form>
     </>
   );
-};
+});

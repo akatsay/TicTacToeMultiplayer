@@ -16,16 +16,38 @@ exports.GameGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 let GameGateway = class GameGateway {
+    constructor() {
+        this.roomCounts = new Map();
+    }
     handleConnection(client) {
-        this.server.emit('connected', 'Connected to game server');
+        client.emit('connected', 'Connected to game server');
         console.log('connected:' + client.id);
     }
     handleDisconnect(client) {
-        this.server.emit('disconnected', 'Disconnected from game server');
+        client.emit('disconnected', 'Disconnected from game server');
         console.log('disconnected:' + client.id);
     }
+    handleJoinRoom(room, client) {
+        const currentCount = this.roomCounts.get(room) || 0;
+        if (currentCount < 2) {
+            this.server.socketsJoin(room);
+            this.roomCounts.set(room, currentCount + 1);
+            client.emit('join-room-success', room);
+            console.log(`${client.id} joined room: ${room}`);
+        }
+        else {
+            client.emit('room-full', room);
+            console.log(`${client.id} attempted to join full room: ${room}`);
+        }
+    }
+    handleLeaveRoom(room, client) {
+        const currentCount = this.roomCounts.get(room) || 0;
+        this.server.socketsLeave(room);
+        this.roomCounts.set(room, currentCount - 1);
+        console.log(`${client.id} left room: ${room}`);
+    }
     handleMessage(chatMessage, client) {
-        this.server.emit('receive-chat-message', `hello from ${client.id}, message is ${chatMessage}`);
+        client.broadcast.emit('receive-chat-message', chatMessage);
     }
 };
 exports.GameGateway = GameGateway;
@@ -33,6 +55,22 @@ __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], GameGateway.prototype, "server", void 0);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('join-room'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "handleJoinRoom", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('leave-room'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "handleLeaveRoom", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('send-chat-message'),
     __param(0, (0, websockets_1.MessageBody)()),
