@@ -22,18 +22,28 @@ export class GameGateway {
     console.log('disconnected:' + client.id);
   }
 
-  // @SubscribeMessage('join-room')
-  // handleMessage(
-  //   @MessageBody() room: string,
-  //     @ConnectedSocket() client: Socket,
-  // ): void {
-  //   this.server.socketsJoin(room);
-  // }
+  @SubscribeMessage('join-room')
+  handleJoinRoom(
+    @MessageBody() room: string,
+      @ConnectedSocket() client: Socket,
+  ): void {
+    this.server.socketsJoin(room);
+    console.log(`${client.id} joined room: ${room}`);
+  }
+
+  @SubscribeMessage('leave-room')
+  handleLeaveRoom(
+    @MessageBody() room: string,
+      @ConnectedSocket() client: Socket,
+  ): void {
+    this.server.socketsLeave(room);
+    console.log(`${client.id} left room: ${room}`);
+  }
   @SubscribeMessage('send-chat-message')
   handleMessage(
     @MessageBody() chatMessage: string,
       @ConnectedSocket() client: Socket,
   ): void {
-    this.server.emit('receive-chat-message', `hello from ${client.id}, message is ${chatMessage}`);
+    client.broadcast.emit('receive-chat-message', chatMessage);
   }
 }
