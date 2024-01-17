@@ -1,11 +1,14 @@
 @import "colors.scss";
 
-.homepage-container {
+.gamepage-container {
+  padding: 20px;
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 100%;
 }
 
 .init-game-form {
@@ -18,7 +21,13 @@
   }
 }
 
-.game-action-btn {
+.room-controls {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-start-btn {
   display: block;
   background-color: $primary;
   color: $fourth;
@@ -27,8 +36,21 @@
   border: none;
 }
 
-.game-action-btn:hover {
+.game-leave-btn {
+  display: block;
+  background-color: $error;
+  color: $fourth;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  border: none;
+}
+
+.game-start-btn:hover {
   background-color: $fifth;
+}
+
+.game-leave-btn:hover {
+  background-color: $lighterror;
 }
 
 .game-action-btn:disabled, {

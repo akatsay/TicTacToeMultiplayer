@@ -6,5 +6,9 @@ export declare class GameGateway {
     private roomCounts;
     handleJoinRoom(room: string, client: Socket): void;
     handleLeaveRoom(room: string, client: Socket): void;
-    handleMessage(chatMessage: string, client: Socket): void;
+    handleMessage(chatMessage: {
+        sender: string;
+        message: string;
+        dateStamp: number;
+    }, client: Socket): void;
 }

@@ -54,9 +54,10 @@ export class GameGateway {
     this.roomCounts.set(room, currentCount - 1);
     console.log(`${client.id} left room: ${room}`);
   }
+
   @SubscribeMessage('send-chat-message')
   handleMessage(
-    @MessageBody() chatMessage: string,
+    @MessageBody() chatMessage: {sender: string, message: string, dateStamp: number},
       @ConnectedSocket() client: Socket,
   ): void {
     client.broadcast.emit('receive-chat-message', chatMessage);

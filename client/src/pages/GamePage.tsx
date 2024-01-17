@@ -14,18 +14,10 @@ export const GamePage = () => {
   const handleFinishGame = useCallback(() => setGameStarted(false), []);
   const handleStartGame = useCallback(() => setGameStarted(true), []);
 
-  // const sendMessage = () => {
-  //   socket.emit('send-chat-message', 'test');
-  // };
-
   useEffect(() => {
     socket.on('connected', message => {
       !gameStarted && toastSuccess(message);
     });
-
-    // socket.on('receive-chat-message', data => {
-    //   console.log(data);
-    // });
 
     return () => {
       socket.disconnect();
@@ -37,7 +29,7 @@ export const GamePage = () => {
 
   return (
     <>
-      <div className="homepage-container">
+      <div className="gamepage-container">
         {
           gameStarted ?
             <GameStarted socket={socket} onFinishGame={handleFinishGame} />

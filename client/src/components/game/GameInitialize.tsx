@@ -56,7 +56,7 @@ export const GameInitialize = memo(({ socket, onStartGame }: IProps) => {
           placeholder='Input room name'
           onChange={handleChange}
         />
-        <button disabled={!room} className='game-action-btn' onClick={handleJoinRoom} >Play</button>
+        <button disabled={!room} className='game-start-btn' onClick={handleJoinRoom} >Play</button>
       </form>
     </>
   );

@@ -4,6 +4,7 @@ import {toastWarning} from '../../utils/toaster';
 import {useAppDispatch} from '../../redux/store';
 import {leaveGameSession, selectRoom} from '../../redux/reducers/gameSessionReducer';
 import {useSelector} from 'react-redux';
+import {Chat} from './chat/Chat';
 
 interface IProps {
   socket: Socket
@@ -29,14 +30,17 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
 
   return (
     <>
-      <h2>{`Welcome to room ${currentRoom}`}</h2>
-      <button
-        disabled={!currentRoom}
-        className='game-action-btn'
-        onClick={() => handleLeaveGame(false)}
-      >
-          Leave the game
-      </button>
+      <div className="room-controls">
+        <h2>{`Welcome to room ${currentRoom}`}</h2>
+        <button
+          disabled={!currentRoom}
+          className='game-leave-btn'
+          onClick={() => handleLeaveGame(false)}
+        >
+            Leave the game
+        </button>
+      </div>
+      <Chat socket={socket} />
     </>
   );
 });

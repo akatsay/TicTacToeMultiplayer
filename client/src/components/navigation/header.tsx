@@ -26,7 +26,7 @@ export const Header = () => {
 
   return (
     <nav className="navbar">
-      <div className="brand-title">Authentication</div>
+      <div className="brand-title">TicTacToe</div>
       <div
         ref={dropdownRef} className={`dropdown ${isAuthenticated ? '' : 'hide'}`}
       >
