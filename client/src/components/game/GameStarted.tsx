@@ -17,7 +17,7 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
 
   const handleLeaveGame = (withToast: boolean) => {
     socket.emit('leave-room', currentRoom);
-    appDispatch(leaveGameSession);
+    // appDispatch(leaveGameSession());
     onFinishGame();
     withToast && toastWarning('Disconnected from the game room');
   };

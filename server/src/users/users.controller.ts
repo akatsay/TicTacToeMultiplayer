@@ -20,7 +20,7 @@ export class UsersController {
 
   @Put('nickname')
   async updateName(
-    @Body(ValidationPipe) updateNickname: UpdateNicknameDto,
+  @Body(ValidationPipe) updateNickname: UpdateNicknameDto,
     @Headers('Authorization') bearerToken: string,
   ) {
     return await this.usersService.updateNickname(updateNickname, bearerToken);
@@ -28,7 +28,7 @@ export class UsersController {
 
   @Put('password')
   async updatePassword(
-    @Body(ValidationPipe) updatePasswordDto: UpdatePasswordDto,
+  @Body(ValidationPipe) updatePasswordDto: UpdatePasswordDto,
     @Headers('Authorization') bearerToken: string,
   ) {
     return await this.usersService.updatePassword(
@@ -39,7 +39,7 @@ export class UsersController {
 
   @Delete()
   async delete(
-    @Body(ValidationPipe) deleteUserDto: DeleteUserDto,
+  @Body(ValidationPipe) deleteUserDto: DeleteUserDto,
     @Headers('Authorization') bearerToken: string,
   ) {
     return await this.usersService.deleteUser(deleteUserDto, bearerToken);

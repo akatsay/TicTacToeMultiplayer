@@ -4,12 +4,14 @@ import {ChangeEvent, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectNickname} from '../../../redux/reducers/authReducer';
 import {MessagesList} from './MessagesList';
+import {selectRoom} from '../../../redux/reducers/gameSessionReducer';
 
 interface IProps {
   socket: Socket
 }
 
 export interface IMessage {
+  room: string
   sender: string | null
   message: string
   dateStamp: number | null
@@ -18,8 +20,9 @@ export interface IMessage {
 export const Chat = ({ socket }: IProps) => {
 
   const nickname = useSelector(selectNickname);
+  const room = useSelector(selectRoom);
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
-  const [messageToSend, setMessageToSend] = useState<IMessage>({sender: nickname, message: '', dateStamp: null});
+  const [messageToSend, setMessageToSend] = useState<IMessage>({room ,sender: nickname, message: '', dateStamp: null});
 
   const messageChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setMessageToSend({ ...messageToSend, dateStamp: Date.now(), [event.target.name]: event.target.value });
@@ -30,7 +33,7 @@ export const Chat = ({ socket }: IProps) => {
     setMessagesList(() => {
       return [...messagesList, messageToSend];
     });
-    setMessageToSend({sender: nickname, message: '', dateStamp: null});
+    setMessageToSend({room, sender: nickname, message: '', dateStamp: null});
   };
 
   socket.on('receive-chat-message', message => {

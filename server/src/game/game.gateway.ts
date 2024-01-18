@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -12,12 +13,12 @@ export class GameGateway {
   @WebSocketServer()
     server: Server;
 
-  handleConnection(client: any) {
+  handleConnection(client: Socket) {
     client.emit('connected', 'Connected to game server');
     console.log('connected:' + client.id);
   }
 
-  handleDisconnect(client: any) {
+  handleDisconnect(client: Socket) {
     client.emit('disconnected', 'Disconnected from game server');
     console.log('disconnected:' + client.id);
   }
@@ -33,7 +34,7 @@ export class GameGateway {
 
     if (currentCount < 2) {
       // Allow the client to join the room
-      this.server.socketsJoin(room);
+      client.join(room);
       this.roomCounts.set(room, currentCount + 1);
       client.emit('join-room-success', room);
       console.log(`${client.id} joined room: ${room}`);
@@ -50,16 +51,20 @@ export class GameGateway {
       @ConnectedSocket() client: Socket,
   ): void {
     const currentCount = this.roomCounts.get(room) || 0;
-    this.server.socketsLeave(room);
-    this.roomCounts.set(room, currentCount - 1);
-    console.log(`${client.id} left room: ${room}`);
+    if (client.rooms.has(room)) {
+      client.leave(room);
+      this.roomCounts.set(room, currentCount - 1);
+      console.log(`${client.id} left room: ${room}`);
+    }
   }
 
   @SubscribeMessage('send-chat-message')
   handleMessage(
-    @MessageBody() chatMessage: {sender: string, message: string, dateStamp: number},
+    @MessageBody() chatMessage: {room: string, sender: string, message: string, dateStamp: number},
       @ConnectedSocket() client: Socket,
   ): void {
-    client.broadcast.emit('receive-chat-message', chatMessage);
+    console.log(chatMessage.sender + ' says: ' + chatMessage + ' to room: ' + chatMessage.room );
+    client.to(chatMessage.room).emit('receive-chat-message', chatMessage);
   }
+
 }

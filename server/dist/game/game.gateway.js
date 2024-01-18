@@ -30,7 +30,7 @@ let GameGateway = class GameGateway {
     handleJoinRoom(room, client) {
         const currentCount = this.roomCounts.get(room) || 0;
         if (currentCount < 2) {
-            this.server.socketsJoin(room);
+            client.join(room);
             this.roomCounts.set(room, currentCount + 1);
             client.emit('join-room-success', room);
             console.log(`${client.id} joined room: ${room}`);
@@ -42,12 +42,15 @@ let GameGateway = class GameGateway {
     }
     handleLeaveRoom(room, client) {
         const currentCount = this.roomCounts.get(room) || 0;
-        this.server.socketsLeave(room);
-        this.roomCounts.set(room, currentCount - 1);
-        console.log(`${client.id} left room: ${room}`);
+        if (client.rooms.has(room)) {
+            client.leave(room);
+            this.roomCounts.set(room, currentCount - 1);
+            console.log(`${client.id} left room: ${room}`);
+        }
     }
     handleMessage(chatMessage, client) {
-        client.broadcast.emit('receive-chat-message', chatMessage);
+        console.log(chatMessage.sender + ' says: ' + chatMessage + ' to room: ' + chatMessage.room);
+        client.to(chatMessage.room).emit('receive-chat-message', chatMessage);
     }
 };
 exports.GameGateway = GameGateway;
