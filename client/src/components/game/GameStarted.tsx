@@ -5,6 +5,7 @@ import {useAppDispatch} from '../../redux/store';
 import {leaveGameSession, selectRoom} from '../../redux/reducers/gameSessionReducer';
 import {useSelector} from 'react-redux';
 import {Chat} from './chat/Chat';
+import {Board} from './board/Board';
 
 interface IProps {
   socket: Socket
@@ -17,7 +18,7 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
 
   const handleLeaveGame = (withToast: boolean) => {
     socket.emit('leave-room', currentRoom);
-    // appDispatch(leaveGameSession());
+    appDispatch(leaveGameSession());
     onFinishGame();
     withToast && toastWarning('Disconnected from the game room');
   };
@@ -26,7 +27,7 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
     return () => {
       handleLeaveGame(true);
     };
-  }, [ socket]);
+  }, [socket]);
 
   return (
     <>
@@ -40,7 +41,10 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
             Leave the game
         </button>
       </div>
-      <Chat socket={socket} />
+      <div className='game-controls-container'>
+        <Board socket={socket} onLeaveGame={handleLeaveGame} />
+        <Chat socket={socket} />
+      </div>
     </>
   );
 });
