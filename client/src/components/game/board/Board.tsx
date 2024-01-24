@@ -1,32 +1,45 @@
 import '../../../styles/scss/board.scss';
 import {useEffect, useState} from 'react';
 import {Square} from './Square';
-import {patterns} from '../../../constants/patterns';
 import {ModalStd} from '../../ui/ModalStd';
 import {PostGameModalContent} from './PostGameModalContent';
 import {Socket} from 'socket.io-client';
+import {useSelector} from 'react-redux';
+import {selectNickname} from '../../../redux/reducers/authReducer';
+import {selectRoom} from '../../../redux/reducers/gameSessionReducer';
 
 interface IProps {
   socket: Socket
   onLeaveGame: (withToast: boolean) => void
 }
 
-type TPlayer = {
-  nickname: string | 'unknown' | 'No one'
+interface IPlayer  {
+  nickname: string | 'unknown' | 'No one' | null
   role: 'o' | 'x' | 'unknown' | 'No one'
 }
 
-export type TGameState = {
-  winner: TPlayer
+export interface IGameState  {
+  winner: IPlayer
+  gameStatus: 'playing' | 'won' | 'tie'
+}
+
+interface serverGameState {
+  players: IPlayer[]
+  currentPlayer: IPlayer
+  winner: IPlayer
+  boardMap: string[]
   gameStatus: 'playing' | 'won' | 'tie'
 }
 
 export const Board = ({ socket, onLeaveGame }: IProps) => {
 
+  const nickname = useSelector(selectNickname);
+  const room = useSelector(selectRoom);
   const [boardMap, setBoardMap] = useState(['', '', '', '', '', '', '', '', '']);
-  const [currentPlayer, setCurrentPlayer] = useState<TPlayer>({nickname: 'test2', role: 'o'});
-  const [gameState, setGameState] = useState<TGameState>({winner: {nickname: 'No one', role: 'No one'}, gameStatus: 'playing'});
+  const [currentPlayer, setCurrentPlayer] = useState<IPlayer>({nickname: nickname, role: 'unknown'});
+  const [gameState, setGameState] = useState<IGameState>({winner: {nickname: 'No one', role: 'No one'}, gameStatus: 'playing'});
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const changePlayer = () => {
     if (currentPlayer.role === 'x') {
@@ -37,39 +50,10 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   };
 
   const chooseSquare = (i: number) => {
-    if (boardMap[i] === '') {
-      setBoardMap((currValue) => {
-        const newBoardMap = [...currValue];
-        newBoardMap[i] = currentPlayer.role;
-        return newBoardMap;
-      });
+    if (gameState.gameStatus === 'playing' && !loading) {
+      socket.emit('make-move', room, i, currentPlayer);
+      setLoading(true);
     }
-  };
-
-  const checkWin = () => {
-    patterns.forEach((currPattern) => {
-      const potentialWinner = boardMap[currPattern[0]];
-      if (potentialWinner === '') return;
-      let foundWinningPattern = true;
-      currPattern.forEach((i) => {
-        if (boardMap[i] !== potentialWinner ) {
-          foundWinningPattern = false;
-        }
-      });
-      if (foundWinningPattern) {
-        setGameState({ winner: currentPlayer, gameStatus: 'won' });
-      }
-    });
-  };
-
-  const checkTie = () => {
-    let allSquaresFilled = true;
-    boardMap.forEach((square) => {
-      if (square === '') {
-        allSquaresFilled = false;
-      }
-    });
-    allSquaresFilled && setGameState({winner: {nickname: 'No one', role: 'No one'}, gameStatus: 'tie'});
   };
 
   const restartGame = () => {
@@ -79,10 +63,18 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   };
 
   useEffect(() => {
-    checkTie();
-    checkWin();
-    changePlayer();
-  }, [boardMap]);
+    socket.on('update-game-state', (gameState: serverGameState) => {
+      setBoardMap(gameState.boardMap);
+      setCurrentPlayer(gameState.currentPlayer);
+      setGameState({winner: gameState.winner, gameStatus: gameState.gameStatus});
+      setLoading(false);
+    });
+
+    return () => {
+      socket.off('update-game-state');
+    };
+
+  }, [socket]);
 
   useEffect(() => {
     if (gameState.gameStatus != 'playing') {

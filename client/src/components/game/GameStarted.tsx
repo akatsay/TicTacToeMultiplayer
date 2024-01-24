@@ -6,6 +6,7 @@ import {leaveGameSession, selectRoom} from '../../redux/reducers/gameSessionRedu
 import {useSelector} from 'react-redux';
 import {Chat} from './chat/Chat';
 import {Board} from './board/Board';
+import {selectNickname} from '../../redux/reducers/authReducer';
 
 interface IProps {
   socket: Socket
@@ -15,9 +16,11 @@ interface IProps {
 export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
   const appDispatch = useAppDispatch();
   const currentRoom = useSelector(selectRoom);
+  const nickname = useSelector(selectNickname);
+  const player = {nickname: nickname, role: 'unknown'};
 
   const handleLeaveGame = (withToast: boolean) => {
-    socket.emit('leave-room', currentRoom);
+    socket.emit('leave-room', currentRoom, player);
     appDispatch(leaveGameSession());
     onFinishGame();
     withToast && toastWarning('Disconnected from the game room');

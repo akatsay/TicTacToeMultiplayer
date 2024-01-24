@@ -3,6 +3,8 @@ import {Socket} from 'socket.io-client';
 import {toastError, toastSuccess} from '../../utils/toaster';
 import {useAppDispatch} from '../../redux/store';
 import {joinGameSession} from '../../redux/reducers/gameSessionReducer';
+import {useSelector} from 'react-redux';
+import {selectNickname} from '../../redux/reducers/authReducer';
 
 interface IProps {
   socket: Socket
@@ -11,20 +13,17 @@ interface IProps {
 export const GameInitialize = memo(({ socket, onStartGame }: IProps) => {
 
   const appDispatch = useAppDispatch();
+  const nickname = useSelector(selectNickname);
   const [room, setRoom] = useState('');
+  const player = {nickname: nickname, role: 'unknown'};
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRoom(e.target.value);
   };
 
-  const handleCreateNewRoom = (e: FormEvent) => {
-    e.preventDefault();
-    socket.emit('join-room', room);
-  };
-
   const handleJoinRoom = (e: FormEvent) => {
     e.preventDefault();
-    socket.emit('join-room', room);
+    socket.emit('join-room', room, player);
   };
 
   useEffect(() => {
