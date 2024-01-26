@@ -7,7 +7,10 @@ export declare class GameGateway {
     private roomCapacityCounts;
     private roomGameState;
     private resetTheGame;
-    handleJoinRoom(room: string, player: IPlayer, client: Socket): void;
+    handleJoinRoom(clientData: {
+        room: string;
+        player: IPlayer;
+    }, client: Socket): void;
     handleLeaveRoom(room: string, player: IPlayer, client: Socket): void;
     handleMessage(chatMessage: {
         room: string;

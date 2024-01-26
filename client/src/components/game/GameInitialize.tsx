@@ -23,7 +23,7 @@ export const GameInitialize = memo(({ socket, onStartGame }: IProps) => {
 
   const handleJoinRoom = (e: FormEvent) => {
     e.preventDefault();
-    socket.emit('join-room', room, player);
+    socket.emit('join-room', {room, player});
   };
 
   useEffect(() => {

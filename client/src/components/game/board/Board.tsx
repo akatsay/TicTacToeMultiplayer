@@ -49,9 +49,9 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
     }
   };
 
-  const chooseSquare = (i: number) => {
+  const chooseSquare = (index: number) => {
     if (gameState.gameStatus === 'playing' && !loading) {
-      socket.emit('make-move', room, i, currentPlayer);
+      socket.emit('make-move', {room, index, currentPlayer});
       setLoading(true);
     }
   };
@@ -64,6 +64,7 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
 
   useEffect(() => {
     socket.on('update-game-state', (gameState: serverGameState) => {
+      console.log(gameState);
       setBoardMap(gameState.boardMap);
       setCurrentPlayer(gameState.currentPlayer);
       setGameState({winner: gameState.winner, gameStatus: gameState.gameStatus});

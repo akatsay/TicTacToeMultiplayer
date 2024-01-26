@@ -46,9 +46,11 @@ export class GameGateway {
 
   @SubscribeMessage('join-room')
   handleJoinRoom(
-    @MessageBody() room: string, player: IPlayer,
+    @MessageBody() clientData: {room: string, player: IPlayer},
       @ConnectedSocket() client: Socket,
   ): void {
+    const room = clientData.room;
+    const player = clientData.player;
     const currentCount = this.roomCapacityCounts.get(room) || 0;
     const existingGameState = this.roomGameState.get(room);
 
@@ -57,11 +59,17 @@ export class GameGateway {
       client.join(room);
       this.roomCapacityCounts.set(room, currentCount + 1);
 
-
+      // first to enter the game should be X and go first
+      console.log('players' + existingGameState?.players?.length);
       if (existingGameState?.players?.length < 1) {
+        console.log('RoomGameState before first player: ' + existingGameState);
         this.roomGameState.set(room, {...existingGameState, players: [...(existingGameState?.players || []), { ...player, role: 'x' }]});
+        console.log('RoomGameState after first player: ' + existingGameState);
+
       } else {
+        console.log('RoomGameState before second player: ' + existingGameState);
         this.roomGameState.set(room, {...existingGameState,   players: [...(existingGameState?.players || []), { ...player, role: 'o' }]});
+        console.log('RoomGameState after second player: ' + existingGameState);
       }
 
 
@@ -107,7 +115,7 @@ export class GameGateway {
       @ConnectedSocket() client: Socket,
   ): void {
     const room = moveData.room;
-    const index = moveData.index;
+    const moveIndex = moveData.index;
     const currentPlayer = moveData.currentPlayer;
     const existingGameState = this.roomGameState.get(room);
     
@@ -116,6 +124,7 @@ export class GameGateway {
       return;
     }
 
+    console.log(currentPlayer.nickname);
     const otherPlayer = this.roomGameState.get(room).players.filter((player) => player.nickname != currentPlayer.nickname);
 
 
@@ -175,11 +184,20 @@ export class GameGateway {
     checkTie();
     checkWin();
     changePlayer();
+    
+    const updatedBoardMap = existingGameState.boardMap.map((val, idx) => {
+      if (idx === moveIndex && val === '') {
+        return currentPlayer.role;
+      }
+    
+      return val;
+    });
+        
     const updatedGameState: IGameState = {
       ...existingGameState,
-      boardMap: [...existingGameState.boardMap, existingGameState.boardMap[index] = currentPlayer.role]
+      boardMap: updatedBoardMap
     };
-
+    
     // Update the roomGameState map with the modified game state
     this.roomGameState.set(room, updatedGameState);
 

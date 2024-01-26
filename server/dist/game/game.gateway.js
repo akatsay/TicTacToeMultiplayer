@@ -42,17 +42,24 @@ let GameGateway = class GameGateway {
         client.emit('disconnected', 'Disconnected from game server');
         console.log('disconnected:' + client.id);
     }
-    handleJoinRoom(room, player, client) {
+    handleJoinRoom(clientData, client) {
+        const room = clientData.room;
+        const player = clientData.player;
         const currentCount = this.roomCapacityCounts.get(room) || 0;
         const existingGameState = this.roomGameState.get(room);
         if (currentCount < 2) {
             client.join(room);
             this.roomCapacityCounts.set(room, currentCount + 1);
+            console.log('players' + existingGameState?.players?.length);
             if (existingGameState?.players?.length < 1) {
+                console.log('RoomGameState before first player: ' + existingGameState);
                 this.roomGameState.set(room, { ...existingGameState, players: [...(existingGameState?.players || []), { ...player, role: 'x' }] });
+                console.log('RoomGameState after first player: ' + existingGameState);
             }
             else {
+                console.log('RoomGameState before second player: ' + existingGameState);
                 this.roomGameState.set(room, { ...existingGameState, players: [...(existingGameState?.players || []), { ...player, role: 'o' }] });
+                console.log('RoomGameState after second player: ' + existingGameState);
             }
             this.resetTheGame(room);
             client.emit('join-room-success', room);
@@ -80,13 +87,14 @@ let GameGateway = class GameGateway {
     }
     handleMakeMove(moveData, client) {
         const room = moveData.room;
-        const index = moveData.index;
+        const moveIndex = moveData.index;
         const currentPlayer = moveData.currentPlayer;
         const existingGameState = this.roomGameState.get(room);
         if (!existingGameState) {
             console.log(`No existing game state for room: ${room}`);
             return;
         }
+        console.log(currentPlayer.nickname);
         const otherPlayer = this.roomGameState.get(room).players.filter((player) => player.nickname != currentPlayer.nickname);
         const changePlayer = () => {
             const updatedGameState = {
@@ -138,9 +146,15 @@ let GameGateway = class GameGateway {
         checkTie();
         checkWin();
         changePlayer();
+        const updatedBoardMap = existingGameState.boardMap.map((val, idx) => {
+            if (idx === moveIndex && val === '') {
+                return currentPlayer.role;
+            }
+            return val;
+        });
         const updatedGameState = {
             ...existingGameState,
-            boardMap: [...existingGameState.boardMap, existingGameState.boardMap[index] = currentPlayer.role]
+            boardMap: updatedBoardMap
         };
         this.roomGameState.set(room, updatedGameState);
         this.server.to(room).emit('update-game-state', this.roomGameState.get(room));
@@ -154,9 +168,9 @@ __decorate([
 __decorate([
     (0, websockets_1.SubscribeMessage)('join-room'),
     __param(0, (0, websockets_1.MessageBody)()),
-    __param(2, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, socket_io_1.Socket]),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], GameGateway.prototype, "handleJoinRoom", null);
 __decorate([
