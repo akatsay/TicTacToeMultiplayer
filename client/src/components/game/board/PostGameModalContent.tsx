@@ -1,8 +1,8 @@
-import {TGameState} from './Board';
+import {IGameState} from './Board';
 
 interface IProps {
   onClose: () => void
-  gameState: TGameState
+  gameState: IGameState
   onRestartGame: () => void
   onLeaveGame: (withToast: boolean) => void
 }
@@ -33,7 +33,7 @@ export const PostGameModalContent = ({onClose, gameState, onRestartGame, onLeave
         <button
           className='game-leave-btn'
           onClick={() => {
-            onLeaveGame(true);
+            onLeaveGame(false);
             onClose();
           }}
         >

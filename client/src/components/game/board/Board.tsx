@@ -41,25 +41,17 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const changePlayer = () => {
-    if (currentPlayer.role === 'x') {
-      setCurrentPlayer({nickname: 'test2', role: 'o'});
-    } else {
-      setCurrentPlayer({nickname: 'test1', role: 'x'});
-    }
-  };
-
   const chooseSquare = (index: number) => {
-    if (gameState.gameStatus === 'playing' && !loading) {
-      socket.emit('make-move', {room, index, currentPlayer});
+    if (gameState.gameStatus === 'playing' && !loading && currentPlayer.nickname === nickname && boardMap[index] === '') {
+      socket.emit('make-move', {room, index});
       setLoading(true);
     }
   };
 
   const restartGame = () => {
-    setCurrentPlayer({nickname: 'test2', role: 'o'});
-    setBoardMap(['', '', '', '', '', '', '', '', '']);
-    setGameState({winner: {nickname: 'unknown', role: 'unknown'}, gameStatus: 'playing'});
+    // setCurrentPlayer({nickname: 'test2', role: 'o'});
+    // setBoardMap(['', '', '', '', '', '', '', '', '']);
+    // setGameState({winner: {nickname: 'unknown', role: 'unknown'}, gameStatus: 'playing'});
   };
 
   useEffect(() => {

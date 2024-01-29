@@ -29,6 +29,7 @@ let GameGateway = class GameGateway {
                 boardMap: ['', '', '', '', '', '', '', '', ''],
                 gameStatus: 'playing'
             };
+            console.log(currentGameStatus);
             if (currentGameStatus) {
                 this.roomGameState.set(room, resetGameState);
             }
@@ -50,16 +51,11 @@ let GameGateway = class GameGateway {
         if (currentCount < 2) {
             client.join(room);
             this.roomCapacityCounts.set(room, currentCount + 1);
-            console.log('players' + existingGameState?.players?.length);
-            if (existingGameState?.players?.length < 1) {
-                console.log('RoomGameState before first player: ' + existingGameState);
+            if (!existingGameState?.players) {
                 this.roomGameState.set(room, { ...existingGameState, players: [...(existingGameState?.players || []), { ...player, role: 'x' }] });
-                console.log('RoomGameState after first player: ' + existingGameState);
             }
             else {
-                console.log('RoomGameState before second player: ' + existingGameState);
                 this.roomGameState.set(room, { ...existingGameState, players: [...(existingGameState?.players || []), { ...player, role: 'o' }] });
-                console.log('RoomGameState after second player: ' + existingGameState);
             }
             this.resetTheGame(room);
             client.emit('join-room-success', room);
@@ -88,75 +84,57 @@ let GameGateway = class GameGateway {
     handleMakeMove(moveData, client) {
         const room = moveData.room;
         const moveIndex = moveData.index;
-        const currentPlayer = moveData.currentPlayer;
         const existingGameState = this.roomGameState.get(room);
         if (!existingGameState) {
             console.log(`No existing game state for room: ${room}`);
             return;
         }
-        console.log(currentPlayer.nickname);
-        const otherPlayer = this.roomGameState.get(room).players.filter((player) => player.nickname != currentPlayer.nickname);
-        const changePlayer = () => {
-            const updatedGameState = {
-                ...existingGameState,
-                currentPlayer: otherPlayer[0]
-            };
-            this.roomGameState.set(room, updatedGameState);
-        };
-        const checkWin = () => {
-            patterns_1.patterns.forEach((currPattern) => {
-                const potentialWinner = existingGameState.boardMap[currPattern[0]];
-                if (potentialWinner === '')
-                    return;
-                let foundWinningPattern = true;
-                currPattern.forEach((i) => {
-                    if (existingGameState.boardMap[i] !== potentialWinner) {
-                        foundWinningPattern = false;
-                    }
-                });
-                if (foundWinningPattern) {
-                    const updatedGameState = {
-                        ...existingGameState,
-                        winner: currentPlayer,
-                        gameStatus: 'won'
-                    };
-                    this.roomGameState.set(room, updatedGameState);
-                }
-            });
-        };
-        const checkTie = () => {
-            let allSquaresFilled = true;
-            existingGameState.boardMap.forEach((square) => {
-                if (square === '') {
-                    allSquaresFilled = false;
-                }
-            });
-            if (allSquaresFilled) {
-                const updatedGameState = {
-                    ...existingGameState,
-                    winner: { nickname: 'No one', role: 'No one' },
-                    gameStatus: 'tie'
-                };
-                this.roomGameState.set(room, updatedGameState);
-            }
-        };
-        if (!existingGameState) {
-            console.log(`No existing game state for room: ${room}`);
-        }
-        checkTie();
-        checkWin();
-        changePlayer();
+        const currentPlayer = existingGameState.currentPlayer;
+        const otherPlayer = existingGameState.players.find((player) => player.nickname !== currentPlayer.nickname);
         const updatedBoardMap = existingGameState.boardMap.map((val, idx) => {
             if (idx === moveIndex && val === '') {
                 return currentPlayer.role;
             }
             return val;
         });
-        const updatedGameState = {
-            ...existingGameState,
-            boardMap: updatedBoardMap
-        };
-        this.roomGameState.set(room, updatedGameState);
+        if (updatedBoardMap.every((square) => square !== '')) {
+            const updatedGameState = {
+                ...existingGameState,
+                winner: { nickname: 'No one', role: 'No one' },
+                gameStatus: 'tie',
+                boardMap: updatedBoardMap,
+            };
+            this.roomGameState.set(room, updatedGameState);
+        }
+        else {
+            const updatedGameState = {
+                ...existingGameState,
+                currentPlayer: otherPlayer,
+                boardMap: updatedBoardMap,
+            };
+            this.roomGameState.set(room, updatedGameState);
+        }
+        patterns_1.patterns.forEach((currPattern) => {
+            const potentialWinner = updatedBoardMap[currPattern[0]];
+            if (potentialWinner === '')
+                return;
+            let foundWinningPattern = true;
+            currPattern.forEach((i) => {
+                if (updatedBoardMap[i] !== potentialWinner) {
+                    foundWinningPattern = false;
+                }
+            });
+            if (foundWinningPattern) {
+                console.log('Winning Pattern Found!');
+                const updatedGameState = {
+                    ...existingGameState,
+                    boardMap: updatedBoardMap,
+                    winner: currentPlayer,
+                    gameStatus: 'won'
+                };
+                this.roomGameState.set(room, updatedGameState);
+            }
+        });
         this.server.to(room).emit('update-game-state', this.roomGameState.get(room));
     }
 };

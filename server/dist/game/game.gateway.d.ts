@@ -21,6 +21,5 @@ export declare class GameGateway {
     handleMakeMove(moveData: {
         room: string;
         index: number;
-        currentPlayer: IPlayer;
     }, client: Socket): void;
 }
