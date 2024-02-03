@@ -25,14 +25,15 @@ let GameGateway = class GameGateway {
             const resetGameState = {
                 players: [...currentGameStatus.players],
                 currentPlayer: currentGameStatus.players[0],
-                winner: { nickname: 'unknown', role: 'unknown' },
+                winner: { nickname: 'unknown', role: 'unknown', readyToRestart: false },
                 boardMap: ['', '', '', '', '', '', '', '', ''],
-                gameStatus: 'playing'
+                gameStatus: 'playing',
             };
             console.log(currentGameStatus);
             if (currentGameStatus) {
                 this.roomGameState.set(room, resetGameState);
             }
+            this.server.to(room).emit('update-game-state', resetGameState);
         };
     }
     handleConnection(client) {
@@ -48,7 +49,7 @@ let GameGateway = class GameGateway {
         const player = clientData.player;
         const currentCount = this.roomCapacityCounts.get(room) || 0;
         const existingGameState = this.roomGameState.get(room);
-        if (currentCount < 2) {
+        if (currentCount < 2 && room) {
             client.join(room);
             this.roomCapacityCounts.set(room, currentCount + 1);
             if (!existingGameState?.players) {
@@ -59,6 +60,7 @@ let GameGateway = class GameGateway {
             }
             this.resetTheGame(room);
             client.emit('join-room-success', room);
+            this.server.to(room).emit('update-game-state', this.roomGameState.get(room));
             console.log(`${client.id} joined room: ${room}`);
         }
         else {
@@ -100,7 +102,7 @@ let GameGateway = class GameGateway {
         if (updatedBoardMap.every((square) => square !== '')) {
             const updatedGameState = {
                 ...existingGameState,
-                winner: { nickname: 'No one', role: 'No one' },
+                winner: { nickname: 'No one', role: 'No one', readyToRestart: false },
                 gameStatus: 'tie',
                 boardMap: updatedBoardMap,
             };
@@ -136,6 +138,26 @@ let GameGateway = class GameGateway {
             }
         });
         this.server.to(room).emit('update-game-state', this.roomGameState.get(room));
+    }
+    handleRestartGame(moveData, client) {
+        const currentRoomGameState = this.roomGameState.get(moveData.room);
+        const updatedGameState = {
+            ...currentRoomGameState,
+            players: currentRoomGameState.players.map((item) => {
+                if (item.nickname === moveData.player.nickname) {
+                    return {
+                        ...item,
+                        readyToRestart: true
+                    };
+                }
+                return item;
+            })
+        };
+        this.roomGameState.set(moveData.room, updatedGameState);
+        this.server.to(moveData.room).emit('update-game-state', updatedGameState);
+        if (updatedGameState.players.every((item) => { item.readyToRestart; })) {
+            this.resetTheGame(moveData.room);
+        }
     }
 };
 exports.GameGateway = GameGateway;
@@ -175,6 +197,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", void 0)
 ], GameGateway.prototype, "handleMakeMove", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('restart-game'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], GameGateway.prototype, "handleRestartGame", null);
 exports.GameGateway = GameGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ cors: true })
 ], GameGateway);

@@ -3,11 +3,12 @@ import {IGameState} from './Board';
 interface IProps {
   onClose: () => void
   gameState: IGameState
+  loadingRestart: boolean
   onRestartGame: () => void
   onLeaveGame: (withToast: boolean) => void
 }
 
-export const PostGameModalContent = ({onClose, gameState, onRestartGame, onLeaveGame}: IProps) => {
+export const PostGameModalContent = ({onClose, gameState, loadingRestart, onRestartGame, onLeaveGame}: IProps) => {
 
   const tie = gameState.gameStatus === 'tie';
 
@@ -28,7 +29,7 @@ export const PostGameModalContent = ({onClose, gameState, onRestartGame, onLeave
             onRestartGame();
             onClose();}}
         >
-                  Play again
+          {loadingRestart ? 'Waiting' : 'Play again'}
         </button>
         <button
           className='game-leave-btn'

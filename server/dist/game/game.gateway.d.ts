@@ -22,4 +22,8 @@ export declare class GameGateway {
         room: string;
         index: number;
     }, client: Socket): void;
+    handleRestartGame(moveData: {
+        room: string;
+        player: IPlayer;
+    }, client: Socket): void;
 }

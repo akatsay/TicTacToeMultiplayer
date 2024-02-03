@@ -16,6 +16,7 @@ interface IProps {
 interface IPlayer  {
   nickname: string | 'unknown' | 'No one' | null
   role: 'o' | 'x' | 'unknown' | 'No one'
+  readyToRestart: boolean
 }
 
 export interface IGameState  {
@@ -36,22 +37,22 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   const nickname = useSelector(selectNickname);
   const room = useSelector(selectRoom);
   const [boardMap, setBoardMap] = useState(['', '', '', '', '', '', '', '', '']);
-  const [currentPlayer, setCurrentPlayer] = useState<IPlayer>({nickname: nickname, role: 'unknown'});
-  const [gameState, setGameState] = useState<IGameState>({winner: {nickname: 'No one', role: 'No one'}, gameStatus: 'playing'});
+  const [currentPlayer, setCurrentPlayer] = useState<IPlayer>({nickname: nickname, role: 'unknown', readyToRestart: false});
+  const [gameState, setGameState] = useState<IGameState>({winner: {nickname: 'No one', role: 'No one', readyToRestart: false}, gameStatus: 'playing'});
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingMove, setLoadingMove] = useState(false);
+  const [loadingRestart, setLoadingRestart] = useState(false);
 
   const chooseSquare = (index: number) => {
-    if (gameState.gameStatus === 'playing' && !loading && currentPlayer.nickname === nickname && boardMap[index] === '') {
+    if (gameState.gameStatus === 'playing' && !loadingMove && currentPlayer.nickname === nickname && boardMap[index] === '') {
       socket.emit('make-move', {room, index});
-      setLoading(true);
+      setLoadingMove(true);
     }
   };
 
   const restartGame = () => {
-    // setCurrentPlayer({nickname: 'test2', role: 'o'});
-    // setBoardMap(['', '', '', '', '', '', '', '', '']);
-    // setGameState({winner: {nickname: 'unknown', role: 'unknown'}, gameStatus: 'playing'});
+    socket.emit('restart-game', {room, player: currentPlayer});
+    setLoadingRestart(true);
   };
 
   useEffect(() => {
@@ -60,7 +61,10 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
       setBoardMap(gameState.boardMap);
       setCurrentPlayer(gameState.currentPlayer);
       setGameState({winner: gameState.winner, gameStatus: gameState.gameStatus});
-      setLoading(false);
+      setLoadingMove(false);
+      if (gameState.players.every((item) => item.readyToRestart)) {
+        setLoadingRestart(false);
+      }
     });
 
     return () => {
@@ -141,11 +145,9 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
         renderContent={(onClose) =>
-          <PostGameModalContent gameState={gameState} onRestartGame={restartGame} onLeaveGame={onLeaveGame} onClose={onClose} />
+          <PostGameModalContent gameState={gameState} onRestartGame={restartGame} loadingRestart={loadingRestart} onLeaveGame={onLeaveGame} onClose={onClose} />
         }
-
       />
-
     </div>
   );
 };

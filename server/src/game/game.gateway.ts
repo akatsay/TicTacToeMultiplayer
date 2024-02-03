@@ -33,9 +33,9 @@ export class GameGateway {
     const resetGameState: IGameState = {
       players: [...currentGameStatus.players],
       currentPlayer: currentGameStatus.players[0],
-      winner: {nickname: 'unknown', role: 'unknown'},
+      winner: {nickname: 'unknown', role: 'unknown', readyToRestart: false},
       boardMap: ['', '', '', '', '', '', '', '', ''],
-      gameStatus: 'playing'
+      gameStatus: 'playing',
     };
 
     console.log(currentGameStatus);
@@ -43,6 +43,7 @@ export class GameGateway {
       this.roomGameState.set(room, resetGameState);
     }
 
+    this.server.to(room).emit('update-game-state', resetGameState);
   }; 
 
   @SubscribeMessage('join-room')
@@ -55,7 +56,7 @@ export class GameGateway {
     const currentCount = this.roomCapacityCounts.get(room) || 0;
     const existingGameState = this.roomGameState.get(room);
 
-    if (currentCount < 2) {
+    if (currentCount < 2 && room) {
       // Allow the client to join the room
       client.join(room);
       this.roomCapacityCounts.set(room, currentCount + 1);
@@ -69,6 +70,8 @@ export class GameGateway {
 
       this.resetTheGame(room);
       client.emit('join-room-success', room);
+      // sending initial state after client connected
+      this.server.to(room).emit('update-game-state', this.roomGameState.get(room));
       console.log(`${client.id} joined room: ${room}`);
     } else {
       // Reject the request since the room is already full
@@ -105,7 +108,7 @@ export class GameGateway {
 
   @SubscribeMessage('make-move')
   handleMakeMove(
-    @MessageBody() moveData: { room: string; index: number },
+    @MessageBody() moveData: { room: string, index: number },
       @ConnectedSocket() client: Socket,
   ): void {
     const room = moveData.room;
@@ -132,7 +135,7 @@ export class GameGateway {
     if (updatedBoardMap.every((square) => square !== '')) {
       const updatedGameState: IGameState = {
         ...existingGameState,
-        winner: { nickname: 'No one', role: 'No one' },
+        winner: { nickname: 'No one', role: 'No one',readyToRestart: false },
         gameStatus: 'tie',
         boardMap: updatedBoardMap,
       };
@@ -174,4 +177,30 @@ export class GameGateway {
     this.server.to(room).emit('update-game-state', this.roomGameState.get(room));
   }
 
+  @SubscribeMessage('restart-game')
+  handleRestartGame(
+    @MessageBody() moveData: { room: string, player: IPlayer  },
+      @ConnectedSocket() client: Socket,
+  ): void {
+    const currentRoomGameState = this.roomGameState.get(moveData.room);
+    // set user's restart readiness state to true
+    const updatedGameState: IGameState = {
+      ...currentRoomGameState,
+      players: currentRoomGameState.players.map((item) => {
+        if (item.nickname === moveData.player.nickname) {
+          return {
+            ...item, 
+            readyToRestart: true
+          };
+        }
+        return item;
+      })
+    };
+    this.roomGameState.set(moveData.room, updatedGameState);
+    this.server.to(moveData.room).emit('update-game-state', updatedGameState);
+
+    if (updatedGameState.players.every((item) => {item.readyToRestart;})) {
+      this.resetTheGame(moveData.room);
+    }
+  }
 }
