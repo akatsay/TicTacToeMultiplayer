@@ -71,12 +71,13 @@ let GameGateway = class GameGateway {
                 if (existingGameState.players?.find((item) => item.nickname === player.nickname)) {
                     client.emit('room-full', room);
                     console.log(`${client.id} is already in the game and trying to join`);
+                    return;
                 }
             }
             if (currentCount < 2) {
                 client.join(room);
                 this.roomCapacityCounts.set(room, currentCount + 1);
-                if (!existingGameState?.players || existingGameState.players[0].role === 'o') {
+                if (!existingGameState?.players || existingGameState.players[0]?.role === 'o') {
                     this.roomGameState.set(room, {
                         ...existingGameState,
                         players: [...(existingGameState?.players || []), { ...player, role: 'x' }],

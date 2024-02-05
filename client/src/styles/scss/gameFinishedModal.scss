@@ -60,3 +60,9 @@
     display: block;
   }
 }
+
+@media (max-width: 700px) {
+  .modal-content {
+    max-width: 80%;
+  }
+}

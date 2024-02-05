@@ -7,7 +7,7 @@ import { useRoutes } from './routes';
 
 import { Footer } from './components/navigation/footer';
 import { Header } from './components/navigation/header';
-import { Loader } from './components/loaders/loader';
+import { AppLoader } from './components/loaders/AppLoader';
 import React from 'react';
 import {Provider} from 'react-redux';
 import store from './redux/store';
@@ -27,7 +27,7 @@ const InnerApp = () => {
   const routes = useRoutes(isAuthenticated);
 
   if (!ready) {
-    return <Loader/>;
+    return <AppLoader/>;
   }
 
   return (

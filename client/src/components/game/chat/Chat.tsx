@@ -1,6 +1,6 @@
 import '../../../styles/scss/chat.scss';
 import {Socket} from 'socket.io-client';
-import {ChangeEvent, useState} from 'react';
+import {ChangeEvent, FormEvent, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {selectNickname} from '../../../redux/reducers/authReducer';
 import {MessagesList} from './MessagesList';
@@ -28,7 +28,8 @@ export const Chat = ({ socket }: IProps) => {
     setMessageToSend({ ...messageToSend, dateStamp: Date.now(), [event.target.name]: event.target.value });
   };
 
-  const sendMessage = () => {
+  const sendMessage = (e: FormEvent) => {
+    e.preventDefault();
     socket.emit('send-chat-message', messageToSend);
     setMessagesList(() => {
       return [...messagesList, messageToSend];
@@ -47,22 +48,24 @@ export const Chat = ({ socket }: IProps) => {
   return (
     <div className="chat-container" >
       <MessagesList messageList={messagesList} />
-      <div className="message-controls-container" >
+      <form className="message-controls-container" >
         <input
           className="chat-input"
           name="message"
           id="message"
           value={messageToSend.message}
           onChange={messageChangeHandler}
+          autoComplete='off'
         />
         <button
+          type='submit'
           disabled={!messageToSend.message}
           className='game-start-btn'
-          onClick={() => sendMessage()}
+          onClick={sendMessage}
         >
         Send
         </button>
-      </div>
+      </form>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {Socket} from 'socket.io-client';
 import {useSelector} from 'react-redux';
 import {selectNickname} from '../../../redux/reducers/authReducer';
 import {selectRoom} from '../../../redux/reducers/gameSessionReducer';
+import {BoardLoadingOverlay} from './BoardLoadingOverlay';
 
 interface IProps {
   socket: Socket
@@ -22,6 +23,7 @@ interface IPlayer  {
 export interface IGameState  {
   winner: IPlayer
   gameStatus: 'playing' | 'won' | 'tie'
+  players: IPlayer[]
 }
 
 interface serverGameState {
@@ -38,7 +40,7 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   const room = useSelector(selectRoom);
   const [boardMap, setBoardMap] = useState(['', '', '', '', '', '', '', '', '']);
   const [currentPlayer, setCurrentPlayer] = useState<IPlayer>({nickname: nickname, role: 'unknown', readyToRestart: false});
-  const [gameState, setGameState] = useState<IGameState>({winner: {nickname: 'No one', role: 'No one', readyToRestart: false}, gameStatus: 'playing'});
+  const [gameState, setGameState] = useState<IGameState>({players: [], winner: {nickname: 'No one', role: 'No one', readyToRestart: false}, gameStatus: 'playing'});
   const [openModal, setOpenModal] = useState(false);
   const [loadingMove, setLoadingMove] = useState(false);
   const [loadingRestart, setLoadingRestart] = useState(false);
@@ -60,7 +62,7 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
       console.log(gameState);
       setBoardMap(gameState.boardMap);
       setCurrentPlayer(gameState.currentPlayer);
-      setGameState({winner: gameState.winner, gameStatus: gameState.gameStatus});
+      setGameState({players: gameState.players, winner: gameState.winner, gameStatus: gameState.gameStatus});
       setLoadingMove(false);
       if (gameState.players.every((item) => item.readyToRestart)) {
         setLoadingRestart(false);
@@ -83,6 +85,10 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
 
   return (
     <div className="board">
+      {
+        gameState.players?.length < 2 &&
+          <BoardLoadingOverlay reason='Waiting for another player to join' />
+      }
       <div className="row">
         <Square
           value={boardMap[0]}

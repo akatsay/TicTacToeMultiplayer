@@ -1,4 +1,5 @@
 import {IGameState} from './Board';
+import {Loader} from '../../loaders/Loader';
 
 interface IProps {
   onClose: () => void
@@ -29,7 +30,7 @@ export const PostGameModalContent = ({onClose, gameState, loadingRestart, onRest
             onRestartGame();
             onClose();}}
         >
-          {loadingRestart ? 'Waiting' : 'Play again'}
+          {loadingRestart ? <><Loader /> Waiting</> : 'Play again'}
         </button>
         <button
           className='game-leave-btn'

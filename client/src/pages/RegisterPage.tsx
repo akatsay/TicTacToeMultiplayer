@@ -56,7 +56,7 @@ export const RegisterPage = () => {
   return (
     <>
       <div className="auth-container">
-        <div className="auth-card">
+        <form className="auth-card">
           <h2 className="action-title">Registration</h2>
           <div className="auth-inputs-container">
             <div className="input-field nickname-field">
@@ -90,7 +90,8 @@ export const RegisterPage = () => {
           </div>
           <div className="auth-action-choice">
             <label>Already registered? </label>
-            <button 
+            <button
+              type="button"
               className="auth-link" 
               onClick={() => {navigate('/login');}
               }>
@@ -99,6 +100,7 @@ export const RegisterPage = () => {
           </div>
           <div className="auth-action">
             <button
+              type='submit'
               className="auth-action-btn grow register"
               onClick={registerHandler}
               disabled={loading || !form.nickname || !form.password}
@@ -111,7 +113,7 @@ export const RegisterPage = () => {
               {`* ${authErrorMessageDetails}`}
             </div>
           }
-        </div>
+        </form>
       </div>
     </>
   );

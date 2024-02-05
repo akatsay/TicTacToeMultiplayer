@@ -8,8 +8,8 @@
   flex: 0.8;
   justify-self: flex-end;
   align-self: flex-end;
-  width: 500px;
-  height: 500px;
+  min-height: 500px;
+  max-height: 500px;
   width: 40%;
   border: 2px solid black;
   padding: 5px;
@@ -98,3 +98,16 @@
     }
   }
 }
+
+@media (max-width: 1000px) {
+  .chat-container {
+    margin-bottom: 20px;
+    width: 90%;
+    justify-self: center;
+    align-self: center;
+    min-height: 40vh;
+    max-height: 40vh;
+
+  }
+}
+

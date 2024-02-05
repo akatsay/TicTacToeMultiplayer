@@ -62,7 +62,7 @@ export const LoginPage: React.FC = () => {
   return (
     <>
       <div className="auth-container">
-        <div className="auth-card">
+        <form className="auth-card">
           <h2 className="action-title">Login</h2>
           <div className="auth-inputs-container">
             <div className="input-field nickname-field">
@@ -98,13 +98,14 @@ export const LoginPage: React.FC = () => {
           </div>
           <div className="auth-action-choice">
             <label>Not registered yet? </label>
-            <button className="auth-link" onClick={() => navigate('/register')}>
+            <button type='button' className="auth-link" onClick={() => navigate('/register')}>
               Register
             </button>
           </div>
           <div className="auth-action">
             <button
               className="auth-action-btn grow login"
+              type='submit'
               onClick={loginHandler}
               disabled={loading || !form.nickname || !form.password}
             >
@@ -116,7 +117,7 @@ export const LoginPage: React.FC = () => {
               * {authErrorMessageDetails}
             </div>
           }
-        </div>
+        </form>
       </div>
     </>
   );

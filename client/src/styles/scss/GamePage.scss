@@ -70,3 +70,9 @@
     background-color: $primary;
   }
 }
+
+@media (max-width: 1000px) {
+  .game-controls-container {
+    flex-direction: column-reverse;
+  }
+}
