@@ -11,7 +11,10 @@ export declare class GameGateway {
         room: string;
         player: IPlayer;
     }, client: Socket): void;
-    handleLeaveRoom(room: string, player: IPlayer, client: Socket): void;
+    handleLeaveRoom(clientData: {
+        room: string;
+        player: IPlayer;
+    }, client: Socket): void;
     handleMessage(chatMessage: {
         room: string;
         sender: string;
@@ -24,6 +27,6 @@ export declare class GameGateway {
     }, client: Socket): void;
     handleRestartGame(moveData: {
         room: string;
-        player: IPlayer;
+        nickname: string;
     }, client: Socket): void;
 }

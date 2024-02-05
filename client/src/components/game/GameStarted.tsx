@@ -20,14 +20,22 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
   const player = {nickname: nickname, role: 'unknown'};
 
   const handleLeaveGame = (withToast: boolean) => {
-    socket.emit('leave-room', currentRoom, player);
+    socket.emit('leave-room', {room: currentRoom, player});
     appDispatch(leaveGameSession());
     onFinishGame();
     withToast && toastWarning('Disconnected from the game room');
   };
 
   useEffect(() => {
+    const handleUnload = () => {
+      handleLeaveGame(true);
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+
     return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+      console.log('Cleanup function for useEffect');
       handleLeaveGame(true);
     };
   }, [socket]);

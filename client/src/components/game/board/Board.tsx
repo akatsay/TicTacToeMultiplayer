@@ -51,7 +51,7 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   };
 
   const restartGame = () => {
-    socket.emit('restart-game', {room, player: currentPlayer});
+    socket.emit('restart-game', {room, nickname});
     setLoadingRestart(true);
   };
 
@@ -76,6 +76,8 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
   useEffect(() => {
     if (gameState.gameStatus != 'playing') {
       setOpenModal(true);
+    } else {
+      setOpenModal(false);
     }
   }, [gameState]);
 
