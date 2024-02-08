@@ -19,9 +19,15 @@ export const GamePage = () => {
       !gameStarted && toastSuccess(message);
     });
 
+    socket.on('game-server-restart', message => {
+      !gameStarted && toastWarning(message);
+      handleFinishGame();
+    });
+
     return () => {
       socket.disconnect();
       socket.off('connected');
+      socket.off('game-server-restart');
       gameStarted && toastWarning('Disconnected from game server');
     };
 

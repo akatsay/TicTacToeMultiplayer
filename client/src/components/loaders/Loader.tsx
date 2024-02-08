@@ -1,7 +1,11 @@
 import '../../styles/scss/loader.scss';
 
-export const Loader = () => {
+interface IProps {
+  size?: 'small' | 'large'
+}
+
+export const Loader = ({size = 'large'}: IProps) => {
   return (
-    <span className="loader"></span>
+    <span className={size === 'large' ? 'loader' : 'small-loader'}></span>
   );
 };

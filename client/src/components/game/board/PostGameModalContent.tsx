@@ -18,19 +18,20 @@ export const PostGameModalContent = ({onClose, gameState, loadingRestart, onRest
       <p className="game-result">
         {!tie && (
           <>
-            {`${gameState.winner.nickname} wins the game playing: ${gameState.winner.role.toUpperCase()}`}
+            {`${gameState.winner.nickname} wins the game playing as: "${gameState.winner.role.toUpperCase()}"`}
           </>
         )}
         {tie && 'That\'s a tie, Nobody wins :('}
       </p>
       <div className="post-game-option-buttons">
         <button
+          disabled={loadingRestart}
           className='game-start-btn'
           onClick={() => {
             onRestartGame();
             onClose();}}
         >
-          {loadingRestart ? <><Loader /> Waiting</> : 'Play again'}
+          {loadingRestart ? <><Loader size={'small'} /> Waiting</> : 'Play again'}
         </button>
         <button
           className='game-leave-btn'

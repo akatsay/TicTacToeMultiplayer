@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { IPlayer } from 'src/types/game.types';
 import { Server, Socket } from 'socket.io';
 export declare class GameGateway {
@@ -29,4 +30,5 @@ export declare class GameGateway {
         room: string;
         nickname: string;
     }, client: Socket): void;
+    interval: NodeJS.Timeout;
 }

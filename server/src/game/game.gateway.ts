@@ -144,8 +144,8 @@ export class GameGateway {
       @ConnectedSocket() client: Socket
   ): void {
     try {
-      console.log(chatMessage.sender + ' says: ' + chatMessage + ' to room: ' + chatMessage.room);
-      client.to(chatMessage.room).emit('receive-chat-message', chatMessage);
+      console.log(chatMessage.sender + ' says: ' + chatMessage.message + ' to room: ' + chatMessage.room);
+      this.server.to(chatMessage.room).emit('receive-chat-message', chatMessage);
     } catch (error) {
       console.error('Error in handleMessage:', error);
     }
@@ -261,4 +261,12 @@ export class GameGateway {
       console.error('Error in handleRestartGame:', error);
     }
   }
+
+  // refresh the whole server every 4 hours
+  interval = setInterval(() => {
+    this.roomGameState.clear();
+    this.roomCapacityCounts.clear();
+    this.server.emit('game-server-restart', 'Game server has been restarted');
+  }, 14400000);
+
 }
