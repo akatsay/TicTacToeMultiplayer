@@ -59,7 +59,6 @@ export const Board = ({ socket, onLeaveGame }: IProps) => {
 
   useEffect(() => {
     socket.on('update-game-state', (gameState: serverGameState) => {
-      console.log(gameState);
       setBoardMap(gameState.boardMap);
       setCurrentPlayer(gameState.currentPlayer);
       setGameState({players: gameState.players, winner: gameState.winner, gameStatus: gameState.gameStatus});

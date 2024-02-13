@@ -24,7 +24,7 @@ export const useFetch = <T>() => {
 
   const request = useCallback(
     async (url: string, options: IRequestOptions = {}) => {
-      const baseUrl = 'http://localhost:5000';
+      const baseUrl = '66.179.253.19:5000';
       const fullUrl = baseUrl + url;
       setLoading(true);
       try {

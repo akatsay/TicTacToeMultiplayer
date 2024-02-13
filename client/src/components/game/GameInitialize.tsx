@@ -32,7 +32,6 @@ export const GameInitialize = memo(({ socket, onStartGame }: IProps) => {
     socket.on('join-room-success', room => {
       appDispatch(joinGameSession({room: room}));
       onStartGame();
-      console.log(room);
       toastSuccess(`Joined room ${room}`);
     });
     socket.on('room-full', room => {

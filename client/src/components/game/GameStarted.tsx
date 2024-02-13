@@ -35,7 +35,6 @@ export const GameStarted = memo(({ socket, onFinishGame }: IProps) => {
 
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
-      console.log('Cleanup function for useEffect');
       handleLeaveGame(true);
     };
   }, [socket]);
