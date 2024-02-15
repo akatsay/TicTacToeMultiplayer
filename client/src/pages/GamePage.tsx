@@ -9,7 +9,7 @@ import {GameStarted} from '../components/game/GameStarted';
 export const GamePage = () => {
 
   const [gameStarted, setGameStarted] = useState(false);
-  const socket = useMemo(() => io('http://localhost:5000'), []);
+  const socket = useMemo(() => io('https://tictactoebysasha.online'), []);
 
   const handleFinishGame = useCallback(() => setGameStarted(false), []);
   const handleStartGame = useCallback(() => setGameStarted(true), []);
