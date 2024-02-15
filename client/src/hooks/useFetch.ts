@@ -24,7 +24,7 @@ export const useFetch = <T>() => {
 
   const request = useCallback(
     async (url: string, options: IRequestOptions = {}) => {
-      const baseUrl = 'https://74.208.237.140:5000';
+      const baseUrl = 'https://tictactoebysasha.online';
       const fullUrl = baseUrl + url;
       setLoading(true);
       try {
