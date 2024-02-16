@@ -275,6 +275,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], GameGateway.prototype, "handleRestartGame", null);
 exports.GameGateway = GameGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ cors: true })
+    (0, websockets_1.WebSocketGateway)({ cors: true, secure: true })
 ], GameGateway);
 //# sourceMappingURL=game.gateway.js.map

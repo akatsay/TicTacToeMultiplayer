@@ -14,7 +14,7 @@ import { GameGateway } from './game/game.gateway';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'root',
+      password: '',
       synchronize: true,
       database: 'tictactoemysql',
       entities: [User],
