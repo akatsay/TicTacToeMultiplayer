@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import * as https from 'https';
 import * as path from 'path';
 
-
 async function bootstrap() {
   try {
     const privateKeyPath = process.env.PRIVATE_KEY_PATH || path.join(__dirname, '../privkey.pem');
@@ -16,7 +15,6 @@ async function bootstrap() {
 
     const app = await NestFactory.create(AppModule);
     const httpsServer = https.createServer(credentials, app.getHttpAdapter().getInstance());
-
     const port = 443;
     
     app.enableCors({
