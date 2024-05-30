@@ -15,6 +15,8 @@ const User_1 = require("./typeorm/entities/User");
 const users_module_1 = require("./users/users.module");
 const auth_module_1 = require("./auth/auth.module");
 const game_gateway_1 = require("./game/game.gateway");
+const serve_static_1 = require("@nestjs/serve-static");
+const path_1 = require("path");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,13 +28,16 @@ exports.AppModule = AppModule = __decorate([
                 host: 'localhost',
                 port: 3306,
                 username: 'root',
-                password: 'root',
+                password: '',
                 synchronize: true,
                 database: 'tictactoemysql',
                 entities: [User_1.User],
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: path_1.default.join(__dirname, '..', 'client', 'build'),
+            }),
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, game_gateway_1.GameGateway],
