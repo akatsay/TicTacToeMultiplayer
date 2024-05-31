@@ -14,17 +14,17 @@ async function bootstrap() {
     const credentials = { key: privateKey, cert: certificate };
 
     const app = await NestFactory.create(AppModule);
-    const httpsServer = https.createServer(credentials, app.getHttpAdapter().getInstance());
-    const port = 443;
+    // const httpsServer = https.createServer(credentials, app.getHttpAdapter().getInstance());
+    // const port = 443;
     
     app.enableCors({
       // origin: '*',
       methods: 'GET,PUT,PATCH,POST,DELETE,UPDATE,OPTIONS',
     });
     await app.listen(5000);
-    httpsServer.listen(port, () => {
-      console.log(`Server running on https://localhost:${port}`);
-    });
+    // httpsServer.listen(port, () => {
+    //   console.log(`Server running on https://localhost:${port}`);
+    // });
   } catch (error) {
     console.error('Error during startup:', error);
   }
