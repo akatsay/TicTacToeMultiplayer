@@ -23,21 +23,21 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(__dirname, '..', '..', 'client', 'build'),
+            }),
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'mysql',
                 host: 'localhost',
                 port: 3306,
                 username: 'root',
-                password: '',
+                password: process.env.DB_PASSWORD,
                 synchronize: true,
                 database: 'tictactoemysql',
                 entities: [User_1.User],
             }),
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
-            serve_static_1.ServeStaticModule.forRoot({
-                rootPath: path_1.default.join(__dirname, '..', 'client', 'build'),
-            }),
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, game_gateway_1.GameGateway],
